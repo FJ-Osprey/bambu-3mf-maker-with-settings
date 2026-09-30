@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 prompts/
 needoh-2
+phone-kickstand/*.stl

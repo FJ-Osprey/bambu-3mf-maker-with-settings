@@ -5,12 +5,14 @@ exports an STL (mm), and renders preview views against a placeholder case.
 
     /Applications/Blender.app/Contents/MacOS/Blender -b --python generate.py -- [--no-render]
 
-ALL DIMENSIONS BELOW ARE PLACEHOLDERS estimated from one photo. Measure the
-real case and replace the CASE / LEAF blocks before printing anything.
+Dimensions are ESTIMATED FROM PHOTOS (no calipers), scaled off an iPhone 12 Pro Max
+(160.8 x 78.1 mm) in a leather case; the recess matching the ~55 mm MagSafe ring
+cross-checks the scale. Print the fit coupon before trusting LEAF_* numbers.
 
-Frame (part-local, mm): origin on the hinge axis, +Y runs along the part when
-it is folded shut against the case, Z = away from the case back. The case back
-surface is Z = 0 in the phone frame.
+Frame (part-local build coords, mm): +Y runs along the part when it is folded
+shut, Z = away from the case. Z = 0 is the leaf's top face (about flush with the
+leather), the hinge axis is at (Y=0, Z=HINGE_Z). Phone frame: case back surface
+at Z = 0, phone centre at the origin.
 """
 
 import math
@@ -24,22 +26,25 @@ from mathutils import Vector, Matrix
 OUT = Path(__file__).resolve().parent
 RENDER_DIR = OUT / "renders"
 
-# ---- CASE (placeholder) ---------------------------------------------------
-PHONE_W, PHONE_H, PHONE_T = 76.0, 150.0, 10.0
-RING_CY = -8.0            # ring recess centre, phone Y (0 = phone centre)
-RING_OD, RING_ID = 58.0, 46.0
-HINGE_BELOW_RING = 5.0    # hinge axis sits this far below the recess bottom edge
-HINGE_Z = 1.6             # hinge axis height above the case back
-KNUCKLE_D, KNUCKLE_L = 3.2, 11.0
+# ---- CASE (from photos, 2026-09-30) ----------------------------------------
+PHONE_W, PHONE_H, PHONE_T = 81.5, 164.5, 10.5
+RING_CY = 0.0             # ring recess centre, phone Y (0 = phone centre); hinge ~51 mm above case bottom
+RING_OD, RING_ID = 55.5, 43.7
+HINGE_BELOW_RING = 3.85   # hinge axis below the recess's outer edge (31.6 mm below ring centre)
+HINGE_Z = 0.85            # hinge axis above the leaf top (flat hinge: leaf tangent to knuckle bottom)
+KNUCKLE_D, KNUCKLE_L = 3.3, 14.0
 
-# ---- LEAF (placeholder) -- the moving hinge leaf the part clamps onto -----
-LEAF_W, LEAF_L, LEAF_T = 16.0, 10.0, 0.8
-RIVET_D, RIVET_H = 3.0, 0.6
+# ---- LEAF (from photos) -- the moving hinge leaf the part caps ------------
+LEAF_W, LEAF_L = 14.0, 9.2    # width; reach from the hinge axis to the leaf tip
+STUB_W, STUB_L = 17.5, 3.5    # broken ring stubs at the leaf tip: overall width, length along Y
+POCKET_D = 0.5                # underside pocket over leaf + stubs (glue reservoir, locates the cap)
+KNUCKLE_CLEAR = KNUCKLE_D / 2 + 0.5   # nothing nearer the axis than this, or it hits the knuckle
 
 # ---- PART ------------------------------------------------------------------
 T = 2.6                   # plate thickness
 EDGE_R = 0.9              # rounded edge radius (snag-proofing)
-PRELOAD_DEG = 2.0         # built-in angle that presses the free end into the case
+PRELOAD_DEG = 1.5         # plate tilted toward the case relative to the leaf: the tip lands
+                          # first and the plate flexes flat as it closes, so no gap at the tip
 OPEN_DEG = 135.0          # the hinge's full-open stop
 
 HINGE_Y = RING_CY - RING_OD / 2 - HINGE_BELOW_RING
@@ -169,20 +174,17 @@ def groove(pts, w=0.7, depth=0.6):
 
 # ------------------------------------------------------------ hinge mount
 def mount():
-    """Sleeve over the hinge leaf. Pocket keyed to the rivet heads; glue as backup.
-    Leaf starts just past the knuckle radius; sleeve wraps it top and bottom."""
-    y0 = KNUCKLE_D / 2 + 0.4
-    wall = 1.0
-    outer = slab("mount", [rounded_rect(0, y0 + (LEAF_L + wall) / 2, LEAF_W + 2 * wall, LEAF_L + wall, 2.0)],
-                 0, T, EDGE_R)
-    # leaf slot, open toward the knuckle, centred on the leaf plane (Z = HINGE_Z - 0 offset handled at assembly)
-    slot = box("slot", 0, y0 + LEAF_L / 2 - 0.5, T / 2, LEAF_W + 0.3, LEAF_L + 1.0, LEAF_T + 0.25)
-    boolean(outer, slot, 'DIFFERENCE')
-    for rx in (-LEAF_W / 2 + 3, 0, LEAF_W / 2 - 3):
-        c = cyl("rivet", RIVET_D / 2 + 0.2, RIVET_H * 2 + LEAF_T + 0.3,
-                (rx, y0 + LEAF_L * 0.6, T / 2))
-        boolean(outer, c, 'DIFFERENCE')
-    return outer
+    """Top cap glued onto the leaf's black face (rivet heads are on the case side when shut).
+    Covers the broken ring stubs; the underside pocket is a glue reservoir that also locates it."""
+    y0, y1 = KNUCKLE_CLEAR, LEAF_L + 1.2
+    cap = slab("cap", [rounded_rect(0, (y0 + y1) / 2, STUB_W + 2.4, y1 - y0, 2.5)], 0, T, EDGE_R)
+    pocket = slab("pocket", [rounded_rect(0, (y0 - 1 + LEAF_L + 0.3) / 2, LEAF_W + 0.4, LEAF_L + 1.3 - y0, 0.8)],
+                  -1, POCKET_D, 0)
+    boolean(cap, pocket, 'DIFFERENCE')
+    ears = slab("ears", [rounded_rect(0, LEAF_L - STUB_L / 2 + 0.3, STUB_W + 0.4, STUB_L + 0.6, 0.8)],
+                -1, POCKET_D, 0)
+    boolean(cap, ears, 'DIFFERENCE')
+    return cap
 
 
 def rounded_rect(cx, cy, w, h, r, n=6):
@@ -229,6 +231,11 @@ def wing_outlines(end_extra=0.0, dr=0.0):
     loops, tips = [], []
     for i, (a0, a1, r1) in enumerate(WING_FEATHERS):
         last = i == len(WING_FEATHERS) - 1
+        # start far enough round that the feather's outer edge stays clear of the knuckle
+        lim = (KNUCKLE_CLEAR + 1.0 - RC) / r1
+        if lim > -1:
+            a0 = max(a0, math.degrees(math.asin(lim)) + 4)
+        a1 = max(a1, a0 + 30)     # a clamped start must never pass the tip (inside-out polygon)
         # stagger radii so no two feathers share a surface (exact boolean chokes on tangent rounds)
         pts, tipc = feather(a0, a1 + (end_extra if last else 0), WING_R_IN - 0.45 * i + 0.3 * (len(WING_FEATHERS) - 1) + dr,
                             r1 + dr, tip=16 if last else 13)
@@ -268,7 +275,8 @@ def wing_body(name, mirror=False, end_extra=0.0, dr=0.0):
 
 def root_block():
     """Shoulder that blends the mount into the design."""
-    return slab("root", [rounded_rect(0, 8.0, LEAF_W + 2.4, 12.0, 3.0)], 0, T, EDGE_R)
+    y0, y1 = KNUCKLE_CLEAR, 14.0
+    return slab("root", [rounded_rect(0, (y0 + y1) / 2, STUB_W + 2.4, y1 - y0, 3.0)], 0, T, EDGE_R)
 
 
 def concept_wing():
@@ -318,8 +326,9 @@ def concept_sword():
     body = slab("blade", [blade], 0, T, EDGE_R)
     boolean(body, slab("guard", [guard], 0, T, EDGE_R), 'UNION')
     boolean(body, slab("grip", [grip], 0, T, EDGE_R), 'UNION')
-    pommel = [(0, -0.5), (6, 1.0), (LEAF_W / 2 + 1.2, 5.5), (LEAF_W / 2 + 1.2, 10.5), (4.5, 13.5),
-              (-4.5, 13.5), (-LEAF_W / 2 - 1.2, 10.5), (-LEAF_W / 2 - 1.2, 5.5), (-6, 1.0)]
+    c0 = KNUCKLE_CLEAR
+    pommel = [(5, c0), (STUB_W / 2 + 1.2, c0 + 2.5), (STUB_W / 2 + 1.2, 10.5), (4.5, 13.5),
+              (-4.5, 13.5), (-STUB_W / 2 - 1.2, 10.5), (-STUB_W / 2 - 1.2, c0 + 2.5), (-5, c0)]
     boolean(body, slab("pommel", [pommel], 0, T, EDGE_R), 'UNION')
     boolean(body, cyl("gem", 1.6, 1.2, (0, 4.2, T)), 'DIFFERENCE')
     boolean(body, groove([(0, guard_y + 6), (0, tip_y - 11)], w=1.6, depth=0.7), 'DIFFERENCE')
@@ -338,9 +347,25 @@ CONCEPTS = {
 # ------------------------------------------------------------ assembly
 def build_part(fn):
     body = fn()
+    # nothing may sit behind/over the knuckle: it would swing into the case on opening
+    boolean(body, box("clip", 0, KNUCKLE_CLEAR - 50, T / 2, 300, 100, 20), 'DIFFERENCE')
+    # preload: tilt the decorative plate toward the case about the hinge axis, relative to the cap
+    body.matrix_world = (Matrix.Translation((0, 0, HINGE_Z)) @ Matrix.Rotation(math.radians(-PRELOAD_DEG), 4, 'X')
+                         @ Matrix.Translation((0, 0, -HINGE_Z)))
+    bpy.context.view_layer.objects.active = body
+    for o in bpy.context.selected_objects:
+        o.select_set(False)
+    body.select_set(True)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     boolean(body, mount(), 'UNION')
     body.name = "part"
     return body
+
+
+def part_matrix(open_deg):
+    """Part build coords -> phone frame. open_deg = 0: cap flat on the leaf, hinge flat."""
+    return (Matrix.Translation((0, HINGE_Y, HINGE_Z)) @ Matrix.Rotation(math.radians(open_deg), 4, 'X')
+            @ Matrix.Translation((0, 0, -HINGE_Z)))
 
 
 def nonmanifold_count(ob):
@@ -371,18 +396,19 @@ def case_model():
     objs.append((recess, (0.03, 0.03, 0.035)))
     disc = slab("disc", [circle(0, RING_CY, RING_ID / 2 - 0.3, 96)], -0.2, 0.35, 0.3)
     objs.append((disc, (0.12, 0.12, 0.13)))
-    bump = slab("bump", [rounded_rect(-PHONE_W / 2 + 22, PHONE_H / 2 - 22, 38, 38, 8)], 0, 2.0, 1.0)
+    bump = slab("bump", [rounded_rect(-PHONE_W / 2 + 23, PHONE_H / 2 - 23, 40, 40, 9)], 0, 2.0, 1.0)
     objs.append((bump, (0.55, 0.57, 0.6)))
+    tear = slab("tear", [rounded_rect(0, HINGE_Y - 1.6 - 7.5, 13.6, 15, 6.7)], -0.8, 0.02, 0)
+    objs.append((tear, (0.03, 0.03, 0.035)))
     k = cyl("knuckle", KNUCKLE_D / 2, KNUCKLE_L, (0, HINGE_Y, HINGE_Z), rot=(0, math.pi / 2, 0))
     objs.append((k, (0.75, 0.72, 0.62)))
     return objs
 
 
-def place_part(part, open_deg, preload=True):
-    """Put the part on the hinge in the phone frame. open_deg=0 is folded shut."""
-    ang = math.radians(open_deg - (PRELOAD_DEG if preload and open_deg == 0 else 0))
-    part.matrix_world = (Matrix.Translation((0, HINGE_Y, HINGE_Z)) @ Matrix.Rotation(ang, 4, 'X')
-                         @ Matrix.Translation((0, 0, -T / 2)))
+def place_part(part, open_deg):
+    """Put the part on the hinge in the phone frame. Shut = open by PRELOAD_DEG, which is where
+    the tilted plate's tip lands on the leather (before the plate is flexed flat)."""
+    part.matrix_world = part_matrix(open_deg if open_deg else PRELOAD_DEG)
 
 
 def color(ob, rgb):
@@ -452,8 +478,7 @@ def scene_closed(name, fn):
 def stand_pose(part_local, open_deg):
     """Portrait stand: phone rests on its bottom-back edge and the part's lowest point.
     Returns (phi, lean_from_vertical) or None if the phone would tip onto its face."""
-    M = (Matrix.Translation((0, HINGE_Y, HINGE_Z)) @ Matrix.Rotation(math.radians(open_deg), 4, 'X')
-         @ Matrix.Translation((0, 0, -T / 2)))
+    M = part_matrix(open_deg)
     pv = [M @ v for v in part_local]
     edge = Vector((0, -PHONE_H / 2, -PHONE_T))
     best = None
@@ -507,11 +532,37 @@ def scene_stand(name, fn, lean_target=20.0):
     return od, lean
 
 
+def fit_coupon(path, widths=(13.4, 14.0, 14.6)):
+    """Three bare caps with different pocket widths, 1/2/3 notches on the tip edge. Try each on
+    the leaf (no calipers needed); set LEAF_W to the one that seats snugly over leaf + stubs."""
+    global LEAF_W
+    keep = LEAF_W
+    caps = []
+    for i, w in enumerate(widths):
+        LEAF_W = w
+        c = mount()
+        tip = LEAF_L + 1.2
+        for k in range(i + 1):
+            boolean(c, box("n", (k - i / 2) * 2.2, tip, T, 1.0, 1.6, 2.0), 'DIFFERENCE')
+        c.location.x = (i - 1) * (STUB_W + 6)
+        caps.append(c)
+    LEAF_W = keep
+    for o in bpy.context.selected_objects:
+        o.select_set(False)
+    for c in caps:
+        c.select_set(True)
+    bpy.context.view_layer.objects.active = caps[0]
+    bpy.ops.object.join()
+    export_stl(caps[0], path)
+
+
 def main():
     args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     do_render = "--no-render" not in args
     RENDER_DIR.mkdir(exist_ok=True)
     report = []
+    clear()
+    fit_coupon(OUT / "fit_coupon.stl")
     for name, fn in CONCEPTS.items():
         clear()
         part = build_part(fn)

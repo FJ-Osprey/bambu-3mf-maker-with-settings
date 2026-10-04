@@ -14,6 +14,19 @@
 
 - Headless Blender: `/Applications/Blender.app/Contents/MacOS/Blender -b --python <script>.py`.
   STL has no units and Blender defaults to meters, so check sizes in mm.
+- **`blendercad.py`**: shared helpers for headless part generators. Import it instead of
+  re-deriving them: rounded-edge slabs from 2D outlines, MANIFOLD booleans, one-solid engraving,
+  pixel-art outlines with `unpinch()`, exact half-space cuts, STL export in mm, Workbench preview
+  renders, `bbox_dims()`. Its docstring lists the traps each one avoids.
+- `phone-kickstand/generate.py` also has reusable logic for any **fold-out part on a friction
+  hinge**: knuckle clearance and a swing bevel for when the hinge axis sits below the part, preload
+  as a tilt about the axis, a portrait-stand solver, print-orientation export (top face down), and a
+  fit coupon for when there are no calipers.
 - `stl_to_bambu_3mf.py` packages **one material per run**. Multicolor (AMS Lite) isn't supported
   yet: export one STL per color in a shared frame, import them together in Bambu Studio as a
   single object, and assign a filament to each part.
+- **Known bug (2026-10-04): don't print a 3MF from `stl_to_bambu_3mf.py` without checking
+  the filament slot.** The object goes on extruder 1. Slot 1 gets the material's preset *name*,
+  but keeps the template's type and temperatures (TPU, 220 °C). The tool's checker still reports
+  PASS. Fix prompt: `prompts/fix-3mf-filament-slot-mismatch.md` (gitignored, mini only). Until it's
+  fixed, open the STL in Bambu Studio and pick the filament profile by hand.

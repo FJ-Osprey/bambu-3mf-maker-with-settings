@@ -23,6 +23,12 @@ import bpy
 import bmesh
 from mathutils import Vector, Matrix
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from blendercad import (arc, circle, mirror_x, clear, slab, to_mesh, box, cyl, boolean,  # noqa: E402
+                        rounded_rect, unpinch, grid_outline, grid_loops, nonmanifold_count,
+                        export_stl, color, camera, setup_render, render, bisect_keep, bbox_dims)
+from blendercad import groove as _groove  # noqa: E402
+
 OUT = Path(__file__).resolve().parent
 RENDER_DIR = OUT / "renders"
 
@@ -62,126 +68,11 @@ R_MID = (RING_OD + RING_ID) / 4
 R_HALF = (RING_OD - RING_ID) / 4
 
 
-# ---------------------------------------------------------------- 2D helpers
-def arc(cx, cy, r, a0, a1, n=24):
-    return [(cx + r * math.cos(math.radians(a0 + (a1 - a0) * i / n)),
-             cy + r * math.sin(math.radians(a0 + (a1 - a0) * i / n))) for i in range(n + 1)]
-
-
-def circle(cx, cy, r, n=48):
-    return arc(cx, cy, r, 0, 360, n)[:-1]
-
-
-def mirror_x(pts):
-    return [(-x, y) for x, y in reversed(pts)]
-
-
-# ---------------------------------------------------------------- 3D helpers
-def clear():
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    s = bpy.context.scene
-    s.unit_settings.system = 'METRIC'
-    s.unit_settings.scale_length = 0.001
-
-
-def slab(name, loops, z0, z1, round_r=0.0):
-    """Extrude closed 2D outlines (outer + holes, even-odd) from z0 to z1 with rounded edges."""
-    cu = bpy.data.curves.new(name, 'CURVE')
-    cu.dimensions = '2D'
-    cu.fill_mode = 'BOTH'
-    cu.resolution_u = 2
-    h = (z1 - z0) / 2
-    if round_r > 0:
-        r = min(round_r, h * 0.95)
-        cu.bevel_depth = r
-        cu.bevel_resolution = 3
-        cu.offset = -r
-        cu.extrude = h - r
-    else:
-        cu.extrude = h
-    for pts in loops:
-        sp = cu.splines.new('POLY')
-        sp.points.add(len(pts) - 1)
-        for p, (x, y) in zip(sp.points, pts):
-            p.co = (x, y, 0, 1)
-        sp.use_cyclic_u = True
-    ob = bpy.data.objects.new(name, cu)
-    bpy.context.collection.objects.link(ob)
-    ob.location.z = (z0 + z1) / 2
-    to_mesh(ob)
-    return ob
-
-
-def to_mesh(ob):
-    bpy.context.view_layer.objects.active = ob
-    for o in bpy.context.selected_objects:
-        o.select_set(False)
-    ob.select_set(True)
-    bpy.ops.object.convert(target='MESH')
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    bm = bmesh.new()
-    bm.from_mesh(ob.data)
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
-    bm.to_mesh(ob.data)
-    bm.free()
-
-
-def box(name, cx, cy, cz, dx, dy, dz):
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(cx, cy, cz))
-    ob = bpy.context.active_object
-    ob.name = name
-    ob.scale = (dx, dy, dz)
-    bpy.ops.object.transform_apply(scale=True)
-    return ob
-
-
-def cyl(name, r, depth, loc, rot=(0, 0, 0), n=32):
-    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=depth, location=loc, rotation=rot, vertices=n)
-    ob = bpy.context.active_object
-    ob.name = name
-    return ob
-
-
-def boolean(target, tool, op):
-    m = target.modifiers.new("b", 'BOOLEAN')
-    m.operation = op
-    m.solver = 'MANIFOLD'  # Blender 4.5+; EXACT left thousands of open edges on tangent rounds
-    m.object = tool
-    bpy.context.view_layer.objects.active = target
-    bpy.ops.object.modifier_apply(modifier=m.name)
-    bpy.data.objects.remove(tool, do_unlink=True)
-
-
-def groove(pts, w=0.7, depth=0.6):
-    """Engraved line along a polyline: one closed stroke outline (offset both sides, round-ish
-    ends) extruded as a single clean solid. A chain of overlapping boxes self-intersects, and
-    the Manifold solver silently drops geometry when a tool does that."""
-    h = w / 2
-    left, right = [], []
-    n = len(pts)
-    for i, (x, y) in enumerate(pts):
-        if i == 0:
-            dx, dy = pts[1][0] - x, pts[1][1] - y
-        elif i == n - 1:
-            dx, dy = x - pts[i - 1][0], y - pts[i - 1][1]
-        else:
-            dx, dy = pts[i + 1][0] - pts[i - 1][0], pts[i + 1][1] - pts[i - 1][1]
-        L = math.hypot(dx, dy) or 1.0
-        nx, ny = -dy / L * h, dx / L * h
-        left.append((x + nx, y + ny))
-        right.append((x - nx, y - ny))
-    # extend ends by h so the cut reads as a rounded stroke
-    def ext(p, q):
-        dx, dy = p[0] - q[0], p[1] - q[1]
-        L = math.hypot(dx, dy) or 1.0
-        return (dx / L * h, dy / L * h)
-    e0, e1 = ext(pts[0], pts[1]), ext(pts[-1], pts[-2])
-    left[0] = (left[0][0] + e0[0], left[0][1] + e0[1]); right[0] = (right[0][0] + e0[0], right[0][1] + e0[1])
-    left[-1] = (left[-1][0] + e1[0], left[-1][1] + e1[1]); right[-1] = (right[-1][0] + e1[0], right[-1][1] + e1[1])
-    return slab("groove", [left + right[::-1]], T - depth, T + 1.0, 0)
-
-
 # ------------------------------------------------------------ hinge mount
+def groove(pts, w=0.7, depth=0.6):
+    return _groove(pts, T, w, depth)
+
+
 def glue_recess():
     y0 = KNUCKLE_CLEAR
     return slab("glue", [rounded_rect(0, (y0 - 1 + LEAF_L + 0.3) / 2, LEAF_W + 0.4, LEAF_L + 1.3 - y0, 0.8)],
@@ -217,24 +108,7 @@ def swing_clip(ob):
     th = math.radians(SWING_DEG)
     n = Vector((0, math.sin(th), math.cos(th)))
     d = -SWING_ALLOW - HINGE_Z
-    p0 = Vector((0, 0, HINGE_Z)) + n * d
-    bm = bmesh.new()
-    bm.from_mesh(ob.data)
-    geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
-    res = bmesh.ops.bisect_plane(bm, geom=geom, dist=1e-5, plane_co=p0, plane_no=n, clear_inner=True)
-    cut_edges = [e for e in res["geom_cut"] if isinstance(e, bmesh.types.BMEdge)]
-    if cut_edges:
-        bmesh.ops.holes_fill(bm, edges=cut_edges)
-    bm.to_mesh(ob.data)
-    bm.free()
-
-
-def rounded_rect(cx, cy, w, h, r, n=6):
-    pts = []
-    for (qx, qy, a0) in ((w / 2 - r, h / 2 - r, 0), (-w / 2 + r, h / 2 - r, 90),
-                         (-w / 2 + r, -h / 2 + r, 180), (w / 2 - r, -h / 2 + r, 270)):
-        pts += arc(cx + qx, cy + qy, r, a0, a0 + 90, n)
-    return pts
+    bisect_keep(ob, Vector((0, 0, HINGE_Z)) + n * d, n)
 
 
 # ------------------------------------------------------------ concepts
@@ -371,69 +245,6 @@ MC_COLORS = {"o": ("outline", (0.10, 0.11, 0.12)), "c": ("blade", (0.20, 0.80, 0
              "h": ("grip", (0.45, 0.28, 0.12))}
 
 
-def unpinch(cells, allowed):
-    """Fill corner-only contacts (two cells touching diagonally, the other two empty) with one of the
-    empty pair, taken from `allowed`. A pinched region traces as a self-touching loop, which the
-    curve fill silently drops (the relief on the diagonal sword vanished that way)."""
-    cells = set(cells)
-    changed = True
-    while changed:
-        changed = False
-        for (x, y) in list(cells):
-            for dx, dy in ((1, 1), (1, -1)):
-                if (x + dx, y + dy) in cells and (x + dx, y) not in cells and (x, y + dy) not in cells:
-                    for f in ((x + dx, y), (x, y + dy)):
-                        if f in allowed:
-                            cells.add(f)
-                            changed = True
-                            break
-    return cells
-
-
-def grid_outline(cellset, px, y0):
-    return [[((x - 0.5) * px, y0 + y * px) for x, y in loop] for loop in grid_loops(cellset)]
-
-
-def grid_loops(cellset):
-    """Boundary loops (mm) of a union of grid cells: cancel shared edges, chain the rest, drop
-    collinear points. Integer lattice until the end, so no float seams (a union of per-pixel boxes
-    left sliver seams that the bevel turned into grooves across the blade)."""
-    edges = {}
-    for (ix, iy) in cellset:
-        c = [(ix, iy), (ix + 1, iy), (ix + 1, iy + 1), (ix, iy + 1)]
-        for k in range(4):
-            e = (c[k], c[(k + 1) % 4])
-            if (e[1], e[0]) in edges:
-                del edges[(e[1], e[0])]
-            else:
-                edges[e] = True
-    nxt = {}
-    for (a, b) in edges:
-        nxt.setdefault(a, []).append(b)
-    loops = []
-    while nxt:
-        start = next(iter(nxt))
-        loop, prev, cur = [start], start, nxt[start].pop()
-        if not nxt[start]:
-            del nxt[start]
-        while cur != start:
-            loop.append(cur)
-            outs = nxt[cur]
-            if len(outs) > 1:
-                # pinch vertex (cells touching only at a corner): take the sharpest right turn so
-                # the two loops separate instead of crossing
-                din = (cur[0] - prev[0], cur[1] - prev[1])
-                outs.sort(key=lambda q: din[0] * (q[1] - cur[1]) - din[1] * (q[0] - cur[0]))
-            prev, cur = cur, outs.pop(0)
-            if not outs:
-                del nxt[prev]
-        pts = [q for i, q in enumerate(loop)
-               if (loop[i - 1][0] - q[0]) * (loop[(i + 1) % len(loop)][1] - q[1])
-               != (loop[i - 1][1] - q[1]) * (loop[(i + 1) % len(loop)][0] - q[0])]
-        loops.append(pts)
-    return loops
-
-
 def concept_mcsword(mono=False):
     cells = {}
     for iy, row in enumerate(MC_ROWS):
@@ -528,8 +339,6 @@ def concept_mcdiag():
 concept_mcdiag.own_cap = True
 
 
-
-
 ALL_CONCEPTS = {
     "mcdiag": concept_mcdiag,
     "mcsword": concept_mcsword,
@@ -596,14 +405,6 @@ def part_matrix(open_deg):
             @ Matrix.Translation((0, 0, -HINGE_Z)))
 
 
-def nonmanifold_count(ob):
-    bm = bmesh.new()
-    bm.from_mesh(ob.data)
-    n = sum(1 for e in bm.edges if not e.is_manifold)
-    bm.free()
-    return n
-
-
 def export_print_stl(ob, path, untilt=True):
     """Print orientation: top face down on the bed (the ear keys stick out underneath, so the part
     can't sit on its bottom). Undo the preload tilt first so the plate's top face is the flat one;
@@ -620,16 +421,6 @@ def export_print_stl(ob, path, untilt=True):
     t.data.transform(Matrix.Translation((0, 0, -zmin)))
     export_stl(t, path)
     bpy.data.objects.remove(t, do_unlink=True)
-
-
-def export_stl(ob, path):
-    for o in bpy.context.selected_objects:
-        o.select_set(False)
-    ob.select_set(True)
-    bpy.context.view_layer.objects.active = ob
-    # scene scale_length=0.001 means 1 BU = 1 mm; export raw BU so the STL is in mm
-    bpy.ops.wm.stl_export(filepath=str(path), export_selected_objects=True,
-                          global_scale=1.0, use_scene_unit=False, apply_modifiers=True)
 
 
 def case_model():
@@ -655,49 +446,6 @@ def place_part(part, open_deg):
     """Put the part on the hinge in the phone frame. Shut = open by PRELOAD_DEG, which is where
     the tilted plate's tip lands on the leather (before the plate is flexed flat)."""
     part.matrix_world = part_matrix(open_deg if open_deg else PRELOAD_DEG)
-
-
-def color(ob, rgb):
-    ob.color = (*rgb, 1.0)
-
-
-def camera(loc, look_at, ortho=None, lens=60):
-    cam = bpy.data.cameras.new("cam")
-    ob = bpy.data.objects.new("cam", cam)
-    bpy.context.collection.objects.link(ob)
-    ob.location = loc
-    d = Vector(look_at) - Vector(loc)
-    ob.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler()
-    if ortho:
-        cam.type = 'ORTHO'
-        cam.ortho_scale = ortho
-    else:
-        cam.lens = lens
-    cam.clip_start = 1
-    cam.clip_end = 5000
-    bpy.context.scene.camera = ob
-    return ob
-
-
-def setup_render(res=(900, 900)):
-    s = bpy.context.scene
-    s.render.engine = 'BLENDER_WORKBENCH'
-    s.display.shading.light = 'STUDIO'
-    s.display.shading.color_type = 'OBJECT'
-    s.display.shading.show_cavity = True
-    s.display.shading.cavity_type = 'BOTH'
-    s.display.shading.show_shadows = True
-    s.display.shading.show_specular_highlight = True
-    s.render.resolution_x, s.render.resolution_y = res
-    s.render.film_transparent = False
-    s.world = bpy.data.worlds.new("w")
-    s.world.color = (0.82, 0.84, 0.86)
-    s.display_settings.display_device = 'sRGB'
-
-
-def render(path):
-    bpy.context.scene.render.filepath = str(path)
-    bpy.ops.render.render(write_still=True)
 
 
 PART_RGB = (0.20, 0.21, 0.23)      # PETG-CF-ish charcoal

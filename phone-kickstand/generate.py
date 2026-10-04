@@ -510,7 +510,8 @@ def concept_mcdiag():
     if inner:
         boolean(body, slab("rel", [to_mm(l) for l in grid_loops(inner)], T - MC_RELIEF, T + 1, 0), 'DIFFERENCE')
     y0 = KNUCKLE_CLEAR
-    block = slab("block", [rounded_rect(0, (y0 + BLOCK_Y1) / 2, BLOCK_W, BLOCK_Y1 - y0, 1.2)], 0, T + 0.4, EDGE_R)
+    # flush with the blade: the part prints top-face-down, so every top surface must sit on the bed
+    block = slab("block", [rounded_rect(0, (y0 + BLOCK_Y1) / 2, BLOCK_W, BLOCK_Y1 - y0, 1.2)], 0, T, EDGE_R)
     # stone texture: a few recessed pixels on a BLOCK_PX grid (fixed pattern, so it's repeatable)
     pattern = ["..#....#", "#...##..", "..#....#"]
     for r, row in enumerate(pattern):
@@ -519,7 +520,7 @@ def concept_mcdiag():
                 cx = -BLOCK_W / 2 + (c + 0.5) * BLOCK_PX
                 cy = BLOCK_Y1 - 0.6 - (r + 0.5) * BLOCK_PX
                 boolean(block, slab("st", [rounded_rect(cx, cy, BLOCK_PX - 0.5, BLOCK_PX - 0.5, 0.3)],
-                                    T + 0.4 - 0.5, T + 2, 0), 'DIFFERENCE')
+                                    T - 0.5, T + 2, 0), 'DIFFERENCE')
     boolean(body, block, 'UNION')
     return body
 
@@ -601,6 +602,24 @@ def nonmanifold_count(ob):
     n = sum(1 for e in bm.edges if not e.is_manifold)
     bm.free()
     return n
+
+
+def export_print_stl(ob, path, untilt=True):
+    """Print orientation: top face down on the bed (the ear keys stick out underneath, so the part
+    can't sit on its bottom). Undo the preload tilt first so the plate's top face is the flat one;
+    the cap's top then sits <= ~0.3 mm off the bed."""
+    t = ob.copy()
+    t.data = ob.data.copy()
+    bpy.context.collection.objects.link(t)
+    M = Matrix.Rotation(math.pi, 4, 'Y')
+    if untilt:
+        M = M @ (Matrix.Translation((0, 0, HINGE_Z)) @ Matrix.Rotation(math.radians(PRELOAD_DEG), 4, 'X')
+                 @ Matrix.Translation((0, 0, -HINGE_Z)))
+    t.data.transform(M)
+    zmin = min(v.co.z for v in t.data.vertices)
+    t.data.transform(Matrix.Translation((0, 0, -zmin)))
+    export_stl(t, path)
+    bpy.data.objects.remove(t, do_unlink=True)
 
 
 def export_stl(ob, path):
@@ -799,7 +818,7 @@ def fit_coupon(path, widths=(13.0, 13.4, 13.8)):
         c.select_set(True)
     bpy.context.view_layer.objects.active = caps[0]
     bpy.ops.object.join()
-    export_stl(caps[0], path)
+    export_print_stl(caps[0], path, untilt=False)    # already print-oriented: top face down
 
 
 def main():
@@ -816,6 +835,7 @@ def main():
         pieces = build_part(fn, mono=True) if multi else build_part(fn)
         part = merged(pieces) if len(pieces) > 1 else pieces[0][0]
         export_stl(part, OUT / f"kickstand_{name}.stl")
+        export_print_stl(part, OUT / f"kickstand_{name}_print.stl")
         bb = [part.matrix_world @ Vector(c) for c in part.bound_box]
         dims = [max(p[i] for p in bb) - min(p[i] for p in bb) for i in range(3)]
         nm = nonmanifold_count(part)
@@ -828,6 +848,7 @@ def main():
             clear()
             for i, (ob, rgb) in enumerate(build_part(fn)):
                 export_stl(ob, OUT / f"kickstand_{name}_color{i + 1}.stl")
+                export_print_stl(ob, OUT / f"kickstand_{name}_color{i + 1}_print.stl")
                 line += f"; color{i + 1} non-manifold {nonmanifold_count(ob)}"
         if do_render:
             scene_closed(name, fn)

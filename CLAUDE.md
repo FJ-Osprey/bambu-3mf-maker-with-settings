@@ -25,9 +25,10 @@
 - **`bambu_sweep.py`**: measures how settings change a project's print time. It edits a 3MF's
   settings, slices it headlessly with the Bambu Studio CLI, and checks the gcode to confirm each
   override took. Use it before guessing which setting to change for speed. `--write` bakes
-  overrides into a copy of the original 3MF. On multicolor prints the cost is mostly the fixed
-  time per filament swap (~60–90 s on the A1 Mini), which no flush setting removes. Only fewer
-  layers or fewer colors per layer cut it (lion cub, 2026-10-04: 364 swaps, 10 of 13 h).
+  overrides into a copy of the original 3MF. Include a positive control (e.g. `layer_height=0.28`).
+  One measurement so far (a 4-color, 205-layer figurine, 2026-10-04): 364 swaps took ~10 of 13 h,
+  about 99 s each. Most of that is fixed swap overhead (cut, chute, wipe). Flush tuning saved
+  25–60 min. Fewer layers (thicker) or fewer colors per layer saved hours.
 - `stl_to_bambu_3mf.py` packages **one material per run**. Multicolor (AMS Lite) isn't supported
   yet: export one STL per color in a shared frame, import them together in Bambu Studio as a
   single object, and assign a filament to each part.

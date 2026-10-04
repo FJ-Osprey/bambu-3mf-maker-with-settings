@@ -22,6 +22,12 @@
   hinge**: knuckle clearance and a swing bevel for when the hinge axis sits below the part, preload
   as a tilt about the axis, a portrait-stand solver, print-orientation export (top face down), and a
   fit coupon for when there are no calipers.
+- **`bambu_sweep.py`**: measures how settings change a project's print time. It edits a 3MF's
+  settings, slices it headlessly with the Bambu Studio CLI, and checks the gcode to confirm each
+  override took. Use it before guessing which setting to change for speed. `--write` bakes
+  overrides into a copy of the original 3MF. On multicolor prints the cost is mostly the fixed
+  time per filament swap (~60–90 s on the A1 Mini), which no flush setting removes. Only fewer
+  layers or fewer colors per layer cut it (lion cub, 2026-10-04: 364 swaps, 10 of 13 h).
 - `stl_to_bambu_3mf.py` packages **one material per run**. Multicolor (AMS Lite) isn't supported
   yet: export one STL per color in a shared frame, import them together in Bambu Studio as a
   single object, and assign a filament to each part.

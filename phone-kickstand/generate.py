@@ -40,9 +40,9 @@ LEAF_W = 13.4             # black stub width (narrowest, next to the knuckle)
 LEAF_L = 1.2 + 6.7        # axis to the black stub's far edge (6.6-6.7 mm from the knuckle)
 EAR_W = 17.6              # steel ears, overall width
 EAR_Y0, EAR_Y1 = 3.0, 7.0 # ears' 4 mm band along Y (from the photos' proportions)
-METAL_T = 0.6             # GUESS: steel leaf thickness -- measure at an ear
-BLACK_T = 1.6             # GUESS: black stub thickness above the steel -- measure
-EAR_KEY_D = BLACK_T - 0.4 # keys drop into the space above the ears where the ring used to be
+METAL_T = 0.6             # calipers: steel leaf at an ear
+BLACK_T = 1.6 - METAL_T   # calipers: 1.6 total; the black stub is painted steel, riveted, permanent
+EAR_KEY_D = BLACK_T - 0.2 # keys drop into the space above the ears where the ring used to be
 GLUE_GAP = 0.2            # shallow recess over the black face for epoxy
 HINGE_Z = KNUCKLE_D / 2 - METAL_T - BLACK_T   # axis height relative to the black face (negative = below)
 KNUCKLE_CLEAR = KNUCKLE_D / 2 + 0.5           # nothing nearer the axis than this

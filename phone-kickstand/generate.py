@@ -31,21 +31,30 @@ PHONE_W, PHONE_H, PHONE_T = 81.5, 164.5, 10.5
 RING_CY = 0.0             # ring recess centre, phone Y (0 = phone centre); hinge ~51 mm above case bottom
 RING_OD, RING_ID = 55.5, 43.7
 HINGE_BELOW_RING = 3.85   # hinge axis below the recess's outer edge (31.6 mm below ring centre)
-HINGE_Z = 0.85            # hinge axis above the leaf top (flat hinge: leaf tangent to knuckle bottom)
-KNUCKLE_D, KNUCKLE_L = 3.3, 14.0
+KNUCKLE_D, KNUCKLE_L = 2.4, 14.0   # calipers: OD ~2.4 (hard to measure)
 
-# ---- LEAF (from photos) -- the moving hinge leaf the part caps ------------
-LEAF_W, LEAF_L = 14.0, 9.2    # width; reach from the hinge axis to the leaf tip
-STUB_W, STUB_L = 17.5, 3.5    # broken ring stubs at the leaf tip: overall width, length along Y
-POCKET_D = 0.5                # underside pocket over leaf + stubs (glue reservoir, locates the cap)
-KNUCKLE_CLEAR = KNUCKLE_D / 2 + 0.5   # nothing nearer the axis than this, or it hits the knuckle
+# ---- LEAF (calipers, 2026-10-04) --------------------------------------------
+# Stack when shut, case side up: steel hinge leaf (knuckle + curved "ears" the ring was riveted
+# to), then the black stub of the snapped ring riveted on top. The cap sits on the black face.
+LEAF_W = 13.4             # black stub width (narrowest, next to the knuckle)
+LEAF_L = 1.2 + 6.7        # axis to the black stub's far edge (6.6-6.7 mm from the knuckle)
+EAR_W = 17.6              # steel ears, overall width
+EAR_Y0, EAR_Y1 = 3.0, 7.0 # ears' 4 mm band along Y (from the photos' proportions)
+METAL_T = 0.6             # GUESS: steel leaf thickness -- measure at an ear
+BLACK_T = 1.6             # GUESS: black stub thickness above the steel -- measure
+EAR_KEY_D = BLACK_T - 0.4 # keys drop into the space above the ears where the ring used to be
+GLUE_GAP = 0.2            # shallow recess over the black face for epoxy
+HINGE_Z = KNUCKLE_D / 2 - METAL_T - BLACK_T   # axis height relative to the black face (negative = below)
+KNUCKLE_CLEAR = KNUCKLE_D / 2 + 0.5           # nothing nearer the axis than this
+SWING_DEG = 125.0         # material behind the axis must clear the case up to this opening...
+SWING_ALLOW = 0.6         # ...allowing this much dip into the teardrop recess / leather
 
 # ---- PART ------------------------------------------------------------------
 T = 2.6                   # plate thickness
 EDGE_R = 0.9              # rounded edge radius (snag-proofing)
 PRELOAD_DEG = 1.5         # plate tilted toward the case relative to the leaf: the tip lands
                           # first and the plate flexes flat as it closes, so no gap at the tip
-OPEN_DEG = 135.0          # the hinge's full-open stop
+OPEN_DEG = 135.0          # the hinge's full-open stop (the stand search stops at SWING_DEG)
 
 HINGE_Y = RING_CY - RING_OD / 2 - HINGE_BELOW_RING
 RC = RING_CY - HINGE_Y    # ring centre in part-local Y
@@ -173,18 +182,51 @@ def groove(pts, w=0.7, depth=0.6):
 
 
 # ------------------------------------------------------------ hinge mount
+def glue_recess():
+    y0 = KNUCKLE_CLEAR
+    return slab("glue", [rounded_rect(0, (y0 - 1 + LEAF_L + 0.3) / 2, LEAF_W + 0.4, LEAF_L + 1.3 - y0, 0.8)],
+                -1, GLUE_GAP, 0)
+
+
+def ear_keys():
+    """Two keys that drop beside the black stub into the space above the steel ears (where the ring
+    used to be): they locate the part and take side/twist loads off the glue."""
+    keys = []
+    for sx in (1, -1):
+        xi, xo = LEAF_W / 2 + 0.3, EAR_W / 2 - 0.2
+        keys.append(slab("key", [rounded_rect(sx * (xi + xo) / 2, (EAR_Y0 + EAR_Y1) / 2, xo - xi,
+                                              EAR_Y1 - EAR_Y0 - 0.4, 0.5)], -EAR_KEY_D, 0.3, 0.3))
+    boolean(keys[0], keys[1], 'UNION')
+    return keys[0]
+
+
 def mount():
-    """Top cap glued onto the leaf's black face (rivet heads are on the case side when shut).
-    Covers the broken ring stubs; the underside pocket is a glue reservoir that also locates it."""
-    y0, y1 = KNUCKLE_CLEAR, LEAF_L + 1.2
-    cap = slab("cap", [rounded_rect(0, (y0 + y1) / 2, STUB_W + 2.4, y1 - y0, 2.5)], 0, T, EDGE_R)
-    pocket = slab("pocket", [rounded_rect(0, (y0 - 1 + LEAF_L + 0.3) / 2, LEAF_W + 0.4, LEAF_L + 1.3 - y0, 0.8)],
-                  -1, POCKET_D, 0)
-    boolean(cap, pocket, 'DIFFERENCE')
-    ears = slab("ears", [rounded_rect(0, LEAF_L - STUB_L / 2 + 0.3, STUB_W + 0.4, STUB_L + 0.6, 0.8)],
-                -1, POCKET_D, 0)
-    boolean(cap, ears, 'DIFFERENCE')
+    """Top cap glued onto the black stub's face, with the ear keys underneath."""
+    y0, y1 = KNUCKLE_CLEAR, LEAF_L + 1.4
+    cap = slab("cap", [rounded_rect(0, (y0 + y1) / 2, EAR_W + 2.4, y1 - y0, 2.5)], 0, T, EDGE_R)
+    boolean(cap, glue_recess(), 'DIFFERENCE')
+    boolean(cap, ear_keys(), 'UNION')
     return cap
+
+
+def swing_clip(ob):
+    """Bevel the near edge so nothing dips more than SWING_ALLOW into the case when the part swings
+    open to SWING_DEG (the axis sits below the part, so the near top edge swings down behind it).
+    World z after opening = HINGE_Z + n.(p - axis) with n = (0, sin, cos); keep n.(p - axis) >= d.
+    Done as a planar bisect + cap: a rotated cutter box silently cut ~20 mm in the wrong place."""
+    th = math.radians(SWING_DEG)
+    n = Vector((0, math.sin(th), math.cos(th)))
+    d = -SWING_ALLOW - HINGE_Z
+    p0 = Vector((0, 0, HINGE_Z)) + n * d
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+    res = bmesh.ops.bisect_plane(bm, geom=geom, dist=1e-5, plane_co=p0, plane_no=n, clear_inner=True)
+    cut_edges = [e for e in res["geom_cut"] if isinstance(e, bmesh.types.BMEdge)]
+    if cut_edges:
+        bmesh.ops.holes_fill(bm, edges=cut_edges)
+    bm.to_mesh(ob.data)
+    bm.free()
 
 
 def rounded_rect(cx, cy, w, h, r, n=6):
@@ -276,7 +318,7 @@ def wing_body(name, mirror=False, end_extra=0.0, dr=0.0):
 def root_block():
     """Shoulder that blends the mount into the design."""
     y0, y1 = KNUCKLE_CLEAR, 14.0
-    return slab("root", [rounded_rect(0, (y0 + y1) / 2, STUB_W + 2.4, y1 - y0, 3.0)], 0, T, EDGE_R)
+    return slab("root", [rounded_rect(0, (y0 + y1) / 2, EAR_W + 2.4, y1 - y0, 3.0)], 0, T, EDGE_R)
 
 
 def concept_wing():
@@ -309,57 +351,145 @@ def concept_wingring():
     return body
 
 
-def concept_sword():
-    """Blocky game-style sword; the hilt is the mount. Blade covers the MagSafe disc."""
-    tip_y = RC + RING_OD / 2 + 1
-    guard_y = 17.0
-    bw = 10.0
-    ogive = []
-    for i in range(1, 12):
-        t = i / 12
-        ogive.append((bw / 2 * math.cos(t * math.pi / 2) ** 0.7, tip_y - 12 + 12 * math.sin(t * math.pi / 2)))
-    blade = [(bw / 2, guard_y + 2), (bw / 2, tip_y - 12)] + ogive + [(0, tip_y)] + \
-        [(-x, y) for x, y in reversed(ogive)] + [(-bw / 2, tip_y - 12), (-bw / 2, guard_y + 2)]
-    guard = [(-15, guard_y + 3.5), (-13.5, guard_y - 1), (13.5, guard_y - 1), (15, guard_y + 3.5),
-             (13, guard_y + 4.5), (4, guard_y + 3.2), (-4, guard_y + 3.2), (-13, guard_y + 4.5)]
-    grip = rounded_rect(0, 13.0, 7, 8, 1.2)
-    body = slab("blade", [blade], 0, T, EDGE_R)
-    boolean(body, slab("guard", [guard], 0, T, EDGE_R), 'UNION')
-    boolean(body, slab("grip", [grip], 0, T, EDGE_R), 'UNION')
-    c0 = KNUCKLE_CLEAR
-    pommel = [(5, c0), (STUB_W / 2 + 1.2, c0 + 2.5), (STUB_W / 2 + 1.2, 10.5), (4.5, 13.5),
-              (-4.5, 13.5), (-STUB_W / 2 - 1.2, 10.5), (-STUB_W / 2 - 1.2, c0 + 2.5), (-5, c0)]
-    boolean(body, slab("pommel", [pommel], 0, T, EDGE_R), 'UNION')
-    boolean(body, cyl("gem", 1.6, 1.2, (0, 4.2, T)), 'DIFFERENCE')
-    boolean(body, groove([(0, guard_y + 6), (0, tip_y - 11)], w=1.6, depth=0.7), 'DIFFERENCE')
-    for k in range(3):
-        boolean(body, groove([(-3.0, 10.2 + 2.2 * k), (3.0, 11.2 + 2.2 * k)], w=0.6), 'DIFFERENCE')
-    return body
+# Blocky voxel-game sword, drawn upright (straight blade, pixel-stepped tip) the way foam toy
+# versions are, rather than the diagonal inventory icon: the straight blade edges snag less.
+# o = outline (dark), c = blade (cyan), h = grip (brown). Rows bottom (hinge) to top.
+MC_ROWS = [
+    ".ooooooo.",   # pommel: the cap -- must cover the ear keys (+-9.4 mm) and the black stub
+    ".ooocooo.",
+    "..ooooo..",
+    "...oho...",
+    "...oho...",
+    ".ooooooo.",   # guard
+] + ["..occco.."] * 10 + [
+    "...oco...",
+    "....o....",
+]
+MC_PX = 3.2
+MC_RELIEF = 0.6       # one-colour version: blade/grip pixels sit this much below the outline
+MC_COLORS = {"o": ("outline", (0.10, 0.11, 0.12)), "c": ("blade", (0.20, 0.80, 0.80)),
+             "h": ("grip", (0.45, 0.28, 0.12))}
+
+
+def grid_outline(cellset, px, y0):
+    """Boundary loops (mm) of a union of grid cells: cancel shared edges, chain the rest, drop
+    collinear points. Integer lattice until the end, so no float seams (a union of per-pixel boxes
+    left sliver seams that the bevel turned into grooves across the blade)."""
+    edges = {}
+    for (ix, iy) in cellset:
+        c = [(ix, iy), (ix + 1, iy), (ix + 1, iy + 1), (ix, iy + 1)]
+        for k in range(4):
+            e = (c[k], c[(k + 1) % 4])
+            if (e[1], e[0]) in edges:
+                del edges[(e[1], e[0])]
+            else:
+                edges[e] = True
+    nxt = {a: b for (a, b) in edges}
+    loops = []
+    while nxt:
+        start = next(iter(nxt))
+        loop, cur = [start], nxt.pop(start)
+        while cur != start:
+            loop.append(cur)
+            cur = nxt.pop(cur)
+        pts = [q for i, q in enumerate(loop)
+               if (loop[i - 1][0] - q[0]) * (loop[(i + 1) % len(loop)][1] - q[1])
+               != (loop[i - 1][1] - q[1]) * (loop[(i + 1) % len(loop)][0] - q[0])]
+        loops.append([((x - 0.5) * px, y0 + y * px) for x, y in pts])
+    return loops
+
+
+def concept_mcsword(mono=False):
+    cells = {}
+    for iy, row in enumerate(MC_ROWS):
+        for ix, ch in enumerate(row):
+            if ch != ".":
+                cells[(ix - len(row) // 2, iy)] = ch
+    y0 = KNUCKLE_CLEAR
+    body = slab("mc", grid_outline(cells, MC_PX, y0), 0, T, EDGE_R)
+    # blade and grip pixels never touch the silhouette, so each colour is body ∩ its own prism
+    prisms = {k: slab(f"pr{k}", grid_outline([c for c, ch in cells.items() if ch == k], MC_PX, y0),
+                      -5, T + 5, 0) for k in ("c", "h")}
+    if mono:
+        for k, pr in prisms.items():
+            boolean(body, slab(f"rel{k}", grid_outline([c for c, ch in cells.items() if ch == k], MC_PX, y0),
+                               T - MC_RELIEF, T + 1, 0), 'DIFFERENCE')
+            bpy.data.objects.remove(pr, do_unlink=True)
+        return body
+    out = {"o": None}
+    for k, pr in prisms.items():
+        piece = body.copy()
+        piece.data = body.data.copy()
+        bpy.context.collection.objects.link(piece)
+        t = pr.copy()
+        t.data = pr.data.copy()
+        bpy.context.collection.objects.link(t)
+        boolean(piece, t, 'INTERSECT')
+        boolean(body, pr, 'DIFFERENCE')
+        out[k] = (piece, MC_COLORS[k][1])
+    out["o"] = (body, MC_COLORS["o"][1])
+    return out
+
+
+concept_mcsword.own_cap = True
 
 
 CONCEPTS = {
     "wingring": concept_wingring,
     "wing": concept_wing,
-    "sword": concept_sword,
+    "mcsword": concept_mcsword,
 }
 
 
 # ------------------------------------------------------------ assembly
-def build_part(fn):
-    body = fn()
-    # nothing may sit behind/over the knuckle: it would swing into the case on opening
+def _finish_piece(body):
+    """Knuckle clip + preload tilt about the hinge axis, applied to a decorative piece."""
     boolean(body, box("clip", 0, KNUCKLE_CLEAR - 50, T / 2, 300, 100, 20), 'DIFFERENCE')
-    # preload: tilt the decorative plate toward the case about the hinge axis, relative to the cap
     body.matrix_world = (Matrix.Translation((0, 0, HINGE_Z)) @ Matrix.Rotation(math.radians(-PRELOAD_DEG), 4, 'X')
                          @ Matrix.Translation((0, 0, -HINGE_Z)))
-    bpy.context.view_layer.objects.active = body
     for o in bpy.context.selected_objects:
         o.select_set(False)
     body.select_set(True)
+    bpy.context.view_layer.objects.active = body
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    boolean(body, mount(), 'UNION')
-    body.name = "part"
-    return body
+
+
+def build_part(fn, **kw):
+    """Returns [(object, rgb)]. A concept returns one object, or {colour_name: (object, rgb)} for a
+    multicolour print; the cap is unioned into the first colour."""
+    res = fn(**kw)
+    pieces = list(res.values()) if isinstance(res, dict) else [(res, PART_RGB_ALT)]
+    for ob, _ in pieces:
+        _finish_piece(ob)
+    if getattr(fn, "own_cap", False):
+        # the design's own pixels form the cap: just add keys and cut the glue recess
+        boolean(pieces[0][0], ear_keys(), 'UNION')
+        for ob, _ in pieces:
+            boolean(ob, glue_recess(), 'DIFFERENCE')
+    else:
+        boolean(pieces[0][0], mount(), 'UNION')
+        for ob, _ in pieces[1:]:      # cap belongs to colour 1 only: no overlapping volumes
+            t = ob.copy()
+            t.data = ob.data.copy()
+            bpy.context.collection.objects.link(t)
+            boolean(pieces[0][0], t, 'DIFFERENCE')
+    for ob, _ in pieces:
+        swing_clip(ob)
+        ob.name = "part"
+    return pieces
+
+
+def merged(pieces):
+    """Single solid of all pieces (for the one-material STL and checks)."""
+    base = pieces[0][0].copy()
+    base.data = pieces[0][0].data.copy()
+    bpy.context.collection.objects.link(base)
+    for ob, _ in pieces[1:]:
+        t = ob.copy()
+        t.data = ob.data.copy()
+        bpy.context.collection.objects.link(t)
+        boolean(base, t, 'UNION')
+    return base
 
 
 def part_matrix(open_deg):
@@ -463,9 +593,9 @@ def scene_closed(name, fn):
     setup_render()
     for ob, rgb in case_model():
         color(ob, rgb)
-    part = build_part(fn)
-    color(part, PART_RGB_ALT)
-    place_part(part, 0)
+    for part, rgb in build_part(fn):
+        color(part, rgb)
+        place_part(part, 0)
     camera((0, RING_CY - 2, 260), (0, RING_CY - 2, 0), ortho=100)
     render(RENDER_DIR / f"{name}_closed_top.png")
     camera((150, RING_CY - 190, 170), (0, RING_CY - 2, 0), lens=70)
@@ -473,6 +603,24 @@ def scene_closed(name, fn):
     # edge-on at case level: how proud of the back is it?
     camera((200, HINGE_Y + 30, 4.0), (0, HINGE_Y + 30, 4.0), ortho=80)
     render(RENDER_DIR / f"{name}_closed_side.png")
+
+
+def scene_detail(name, fn):
+    """The part alone: underside (keys, glue recess) and, for multicolour designs, the one-colour
+    relief version from above."""
+    clear()
+    setup_render((900, 700))
+    for part, rgb in build_part(fn):
+        color(part, rgb)
+    camera((60, -40, -70), (0, 14, 0), lens=55)
+    render(RENDER_DIR / f"{name}_underside.png")
+    if "mono" in fn.__code__.co_varnames:
+        clear()
+        setup_render((900, 700))
+        for part, _ in build_part(fn, mono=True):
+            color(part, (0.20, 0.21, 0.23))
+        camera((70, -50, 90), (0, 26, 0), lens=55)
+        render(RENDER_DIR / f"{name}_mono.png")
 
 
 def stand_pose(part_local, open_deg):
@@ -502,18 +650,19 @@ def scene_stand(name, fn, lean_target=20.0):
     """Phone standing in portrait on the part, at the open angle that gives ~lean_target."""
     clear()
     setup_render()
-    part = build_part(fn)
-    local = [v.co.copy() for v in part.data.vertices]
+    pieces = build_part(fn)
+    local = [v.co.copy() for part, _ in pieces for v in part.data.vertices]
     choice = None
-    for od in range(20, int(OPEN_DEG) + 1):
+    for od in range(20, int(SWING_DEG) + 1):
         r = stand_pose(local, od)
         if r and r[2] and (choice is None or abs(r[1] - lean_target) < abs(choice[2] - lean_target)):
             choice = (od, r[0], r[1])
     if choice is None:
         return None
     od, phi, lean = choice
-    objs = case_model() + [(part, PART_RGB_ALT)]
-    place_part(part, od)
+    objs = case_model() + pieces
+    for part, _ in pieces:
+        place_part(part, od)
     R = Matrix.Rotation(phi, 4, 'X')
     for ob, rgb in objs:
         color(ob, rgb)
@@ -532,19 +681,19 @@ def scene_stand(name, fn, lean_target=20.0):
     return od, lean
 
 
-def fit_coupon(path, widths=(13.4, 14.0, 14.6)):
-    """Three bare caps with different pocket widths, 1/2/3 notches on the tip edge. Try each on
-    the leaf (no calipers needed); set LEAF_W to the one that seats snugly over leaf + stubs."""
+def fit_coupon(path, widths=(13.0, 13.4, 13.8)):
+    """Three bare caps whose ear keys are spaced for black-stub widths 13.0 / 13.4 / 13.8 mm
+    (1/2/3 notches on the tip edge). Set LEAF_W to the one that drops over the stub snugly."""
     global LEAF_W
     keep = LEAF_W
     caps = []
     for i, w in enumerate(widths):
         LEAF_W = w
         c = mount()
-        tip = LEAF_L + 1.2
+        tip = LEAF_L + 1.4
         for k in range(i + 1):
             boolean(c, box("n", (k - i / 2) * 2.2, tip, T, 1.0, 1.6, 2.0), 'DIFFERENCE')
-        c.location.x = (i - 1) * (STUB_W + 6)
+        c.location.x = (i - 1) * (EAR_W + 6)
         caps.append(c)
     LEAF_W = keep
     for o in bpy.context.selected_objects:
@@ -565,19 +714,26 @@ def main():
     fit_coupon(OUT / "fit_coupon.stl")
     for name, fn in CONCEPTS.items():
         clear()
-        part = build_part(fn)
-        stl = OUT / f"kickstand_{name}.stl"
-        export_stl(part, stl)
+        multi = "mono" in fn.__code__.co_varnames
+        pieces = build_part(fn, mono=True) if multi else build_part(fn)
+        part = merged(pieces) if len(pieces) > 1 else pieces[0][0]
+        export_stl(part, OUT / f"kickstand_{name}.stl")
         bb = [part.matrix_world @ Vector(c) for c in part.bound_box]
         dims = [max(p[i] for p in bb) - min(p[i] for p in bb) for i in range(3)]
         nm = nonmanifold_count(part)
         line = f"{name}: {dims[0]:.1f} x {dims[1]:.1f} x {dims[2]:.1f} mm, non-manifold edges {nm}"
         # A zero non-manifold count does NOT mean the booleans worked: a bad operand makes the
         # solver silently drop whole pieces and still return a closed mesh. Length catches that.
-        if dims[1] < 55:
+        if dims[1] < 50:
             line += "  <-- SHORT: a boolean probably dropped geometry"
+        if multi:     # multicolour: one STL per filament, shared frame
+            clear()
+            for i, (ob, rgb) in enumerate(build_part(fn)):
+                export_stl(ob, OUT / f"kickstand_{name}_color{i + 1}.stl")
+                line += f"; color{i + 1} non-manifold {nonmanifold_count(ob)}"
         if do_render:
             scene_closed(name, fn)
+            scene_detail(name, fn)
             st = scene_stand(name, fn)
             line += (f", portrait stand: open {st[0]} deg, leans {st[1]:.0f} deg" if st
                      else ", portrait stand: NO stable pose")

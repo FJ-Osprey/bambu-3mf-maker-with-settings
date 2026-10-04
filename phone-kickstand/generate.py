@@ -371,7 +371,30 @@ MC_COLORS = {"o": ("outline", (0.10, 0.11, 0.12)), "c": ("blade", (0.20, 0.80, 0
              "h": ("grip", (0.45, 0.28, 0.12))}
 
 
+def unpinch(cells, allowed):
+    """Fill corner-only contacts (two cells touching diagonally, the other two empty) with one of the
+    empty pair, taken from `allowed`. A pinched region traces as a self-touching loop, which the
+    curve fill silently drops (the relief on the diagonal sword vanished that way)."""
+    cells = set(cells)
+    changed = True
+    while changed:
+        changed = False
+        for (x, y) in list(cells):
+            for dx, dy in ((1, 1), (1, -1)):
+                if (x + dx, y + dy) in cells and (x + dx, y) not in cells and (x, y + dy) not in cells:
+                    for f in ((x + dx, y), (x, y + dy)):
+                        if f in allowed:
+                            cells.add(f)
+                            changed = True
+                            break
+    return cells
+
+
 def grid_outline(cellset, px, y0):
+    return [[((x - 0.5) * px, y0 + y * px) for x, y in loop] for loop in grid_loops(cellset)]
+
+
+def grid_loops(cellset):
     """Boundary loops (mm) of a union of grid cells: cancel shared edges, chain the rest, drop
     collinear points. Integer lattice until the end, so no float seams (a union of per-pixel boxes
     left sliver seams that the bevel turned into grooves across the blade)."""
@@ -384,18 +407,30 @@ def grid_outline(cellset, px, y0):
                 del edges[(e[1], e[0])]
             else:
                 edges[e] = True
-    nxt = {a: b for (a, b) in edges}
+    nxt = {}
+    for (a, b) in edges:
+        nxt.setdefault(a, []).append(b)
     loops = []
     while nxt:
         start = next(iter(nxt))
-        loop, cur = [start], nxt.pop(start)
+        loop, prev, cur = [start], start, nxt[start].pop()
+        if not nxt[start]:
+            del nxt[start]
         while cur != start:
             loop.append(cur)
-            cur = nxt.pop(cur)
+            outs = nxt[cur]
+            if len(outs) > 1:
+                # pinch vertex (cells touching only at a corner): take the sharpest right turn so
+                # the two loops separate instead of crossing
+                din = (cur[0] - prev[0], cur[1] - prev[1])
+                outs.sort(key=lambda q: din[0] * (q[1] - cur[1]) - din[1] * (q[0] - cur[0]))
+            prev, cur = cur, outs.pop(0)
+            if not outs:
+                del nxt[prev]
         pts = [q for i, q in enumerate(loop)
                if (loop[i - 1][0] - q[0]) * (loop[(i + 1) % len(loop)][1] - q[1])
                != (loop[i - 1][1] - q[1]) * (loop[(i + 1) % len(loop)][0] - q[0])]
-        loops.append([((x - 0.5) * px, y0 + y * px) for x, y in pts])
+        loops.append(pts)
     return loops
 
 
@@ -434,11 +469,73 @@ def concept_mcsword(mono=False):
 concept_mcsword.own_cap = True
 
 
-CONCEPTS = {
+MCD_PX = 2.8          # sprite pixel
+MCD_ANGLE = 70.0      # blade axis from horizontal (45 = the icon as drawn; steeper fits the case)
+BLOCK_W, BLOCK_Y1 = EAR_W + 2.8, 12.0   # the block the sword is stuck in = the cap over the leaf
+BLOCK_PX = BLOCK_W / 8
+
+
+def mc_diag_cells():
+    """The inventory-icon sword: 16x16 sprite, pommel bottom-left, tip top-right. In sprite
+    coords (x right, y down) s = x - y runs along the blade, u = x + y - 15 across it."""
+    cells = set()
+    for x in range(16):
+        for y in range(16):
+            s_, u = x - y, x + y - 15
+            if ((-2 <= s_ <= 12 and abs(u) <= 2) or (13 <= s_ <= 15 and abs(u) <= 15 - s_)   # blade, tip
+                    or (-4 <= s_ <= -3 and abs(u) <= 5)                                     # guard
+                    or (-10 <= s_ <= -5 and abs(u) <= 1)                                    # grip
+                    or (-13 <= s_ <= -11 and abs(u) <= 2)):                                 # pommel
+                cells.add((x, y))
+    return cells
+
+
+def concept_mcdiag():
+    """Icon-shaped voxel sword stuck tip-first in a voxel block. The block is the cap over the leaf;
+    the hilt is the far end (the stand's foot). One colour: pixels with an empty neighbour are the
+    raised outline, the rest sit MC_RELIEF lower; the block gets a stone-ish pixel texture."""
+    sprite = mc_diag_cells()
+    phi = math.radians(MCD_ANGLE)
+    D, N = Vector((math.cos(phi), math.sin(phi))), Vector((-math.sin(phi), math.cos(phi)))
+    k = MCD_PX / math.sqrt(2)
+    anchor = Vector((0, BLOCK_Y1 - 4.0))          # where the tip corner sits, inside the block
+
+    def to_mm(loop):    # sprite lattice (X, Y down) -> part frame; along = distance from the tip
+        return [tuple(anchor + D * ((15 - (X - Y)) * k) + N * ((X + Y - 15) * k)) for X, Y in loop]
+
+    body = slab("mcd", [to_mm(l) for l in grid_loops(sprite)], 0, T, EDGE_R)
+    inner = {c for c in sprite if all((c[0] + dx, c[1] + dy) in sprite
+                                      for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))}
+    inner = unpinch(inner, sprite)
+    if inner:
+        boolean(body, slab("rel", [to_mm(l) for l in grid_loops(inner)], T - MC_RELIEF, T + 1, 0), 'DIFFERENCE')
+    y0 = KNUCKLE_CLEAR
+    block = slab("block", [rounded_rect(0, (y0 + BLOCK_Y1) / 2, BLOCK_W, BLOCK_Y1 - y0, 1.2)], 0, T + 0.4, EDGE_R)
+    # stone texture: a few recessed pixels on a BLOCK_PX grid (fixed pattern, so it's repeatable)
+    pattern = ["..#....#", "#...##..", "..#....#"]
+    for r, row in enumerate(pattern):
+        for c, ch in enumerate(row):
+            if ch == "#":
+                cx = -BLOCK_W / 2 + (c + 0.5) * BLOCK_PX
+                cy = BLOCK_Y1 - 0.6 - (r + 0.5) * BLOCK_PX
+                boolean(block, slab("st", [rounded_rect(cx, cy, BLOCK_PX - 0.5, BLOCK_PX - 0.5, 0.3)],
+                                    T + 0.4 - 0.5, T + 2, 0), 'DIFFERENCE')
+    boolean(body, block, 'UNION')
+    return body
+
+
+concept_mcdiag.own_cap = True
+
+
+
+
+ALL_CONCEPTS = {
+    "mcdiag": concept_mcdiag,
+    "mcsword": concept_mcsword,
     "wingring": concept_wingring,
     "wing": concept_wing,
-    "mcsword": concept_mcsword,
 }
+CONCEPTS = {k: ALL_CONCEPTS[k] for k in ("mcdiag", "mcsword")}   # --all renders the wings too
 
 
 # ------------------------------------------------------------ assembly
@@ -708,11 +805,12 @@ def fit_coupon(path, widths=(13.0, 13.4, 13.8)):
 def main():
     args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     do_render = "--no-render" not in args
+    concepts = ALL_CONCEPTS if "--all" in args else CONCEPTS
     RENDER_DIR.mkdir(exist_ok=True)
     report = []
     clear()
     fit_coupon(OUT / "fit_coupon.stl")
-    for name, fn in CONCEPTS.items():
+    for name, fn in concepts.items():
         clear()
         multi = "mono" in fn.__code__.co_varnames
         pieces = build_part(fn, mono=True) if multi else build_part(fn)

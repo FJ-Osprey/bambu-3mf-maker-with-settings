@@ -4,6 +4,7 @@
 Usage:
   bambu_sweep.py IN.3mf --variant NAME 'key=value' ['key=value' ...] [--variant ...]
   bambu_sweep.py IN.3mf --write OUT.3mf 'key=value' ...      # edited project, no slicing
+  bambu_sweep.py IN.3mf --write OUT.3mf --keep-slots 4 ...    # also drop unused slots 5+
 
 Each variant edits Metadata/project_settings.config inside a copy of the 3MF, slices it with
 the Bambu Studio CLI, and reports the slicer's total time estimate, filament changes and
@@ -83,17 +84,56 @@ def apply_overrides(cfg, overrides):
     return cfg
 
 
-def write_3mf(src, dst, overrides):
+def keep_slots(cfg, n):
+    """Drop filament slots n+1.. from the project, keeping slots 1..n.
+
+    Only a prefix can be kept: painted faces reference slots by number, and renumbering the
+    mesh paint is not implemented. Slice afterwards and confirm only slots 1..n extrude.
+    """
+    old = len(cfg["filament_settings_id"])
+    if not 0 < n < old:
+        sys.exit(f"--keep-slots {n}: project has {old} slots")
+    for k in ("support_filament", "support_interface_filament", "wall_filament",
+              "sparse_infill_filament", "solid_infill_filament"):
+        if int(cfg.get(k, "0") or 0) > n:
+            print(f"  {k} was slot {cfg[k]}; reset to 0 (default: the object's own filament)",
+                  file=sys.stderr)
+            cfg[k] = "0"
+    for k, v in list(cfg.items()):
+        if not isinstance(v, list):
+            continue
+        if k == "flush_volumes_matrix" and len(v) == old * old:
+            cfg[k] = [v[r * old + c] for r in range(n) for c in range(n)]
+        elif k == "different_settings_to_system" and len(v) == old + 2:
+            cfg[k] = v[:1 + n] + v[-1:]  # process, filaments..., printer
+        elif len(v) % old == 0 and len(v) >= old:
+            per = len(v) // old  # per-slot groups, e.g. drying temps are 4 per slot
+            cfg[k] = v[:n * per]
+        elif old - 1 <= len(v) < old:
+            cfg[k] = v[:n]  # arrays already short by one in Bambu's own files
+        # other lengths are not per-slot and are left alone
+    return cfg
+
+
+def write_3mf(src, dst, overrides, keep=None):
     if os.path.realpath(src) == os.path.realpath(dst):
         sys.exit("refusing to overwrite the input 3MF; give --write a new file name")
     with zipfile.ZipFile(src) as zin:
         cfg = json.loads(zin.read(CFG))
-        apply_overrides(cfg, overrides)
+        if keep:
+            keep_slots(cfg, keep)
+        apply_overrides(cfg, overrides)  # after trimming, so [i] indexes the new layout
         with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as zout:
             for item in zin.infolist():
                 data = zin.read(item.filename)
                 if item.filename == CFG:
                     data = json.dumps(cfg, indent=4).encode()
+                elif keep and item.filename == "Metadata/model_settings.config":
+                    txt = data.decode()
+                    for key in ("filament_maps", "filament_volume_maps"):
+                        txt = re.sub(rf'(key="{key}" value=")([^"]*)"',
+                                     lambda m: m.group(1) + " ".join(m.group(2).split()[:keep]) + '"', txt)
+                    data = txt.encode()
                 zout.writestr(item, data)
 
 
@@ -177,11 +217,13 @@ def main():
     ap.add_argument("--variant", nargs="+", action="append", default=[], metavar=("NAME", "KEY=VALUE"))
     ap.add_argument("--write", metavar="OUT.3mf")
     ap.add_argument("overrides", nargs="*", help="with --write: the overrides to bake in")
+    ap.add_argument("--keep-slots", type=int, metavar="N",
+                    help="with --write: keep filament slots 1..N, drop the rest")
     ap.add_argument("--workdir", help="keep sliced outputs here (default: temp dir, deleted)")
     a = ap.parse_args()
 
     if a.write:
-        write_3mf(a.project, a.write, [parse_override(o) for o in a.overrides])
+        write_3mf(a.project, a.write, [parse_override(o) for o in a.overrides], a.keep_slots)
         print(f"wrote {a.write}")
         return
 

@@ -40,16 +40,17 @@ def main():
     re_ = re.compile(r"E([\d.-]+)")
     arcs = 0
     for line in open(a.gcode, errors="replace"):
+        if line.startswith("; FEATURE:"):
+            feat = line.split(":", 1)[1].strip()
+            counts[feat] += 1
+            continue
         line = line.split(";", 1)[0]
         if line.startswith("G2") or line.startswith("G3"):
             me = re_.search(line)
             if me and float(me.group(1)) > 0:
                 arcs += 1
             continue
-        if line.startswith("; FEATURE:"):
-            feat = line.split(":", 1)[1].strip()
-            counts[feat] += 1
-        elif line.startswith("G1") or line.startswith("G0"):
+        if line.startswith("G1") or line.startswith("G0"):
             mz = rz.search(line)
             if mz:
                 z = float(mz.group(1))

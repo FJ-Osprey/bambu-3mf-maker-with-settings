@@ -29,6 +29,12 @@
   One measurement so far (a 4-color, 205-layer figurine, 2026-10-04): 364 swaps took ~10 of 13 h,
   about 99 s each. Most of that is fixed swap overhead (cut, chute, wipe). Flush tuning saved
   25–60 min. Fewer layers (thicker) or fewer colors per layer saved hours.
+- **`gcode_features.py`**: reads a sliced `plate_1.gcode` (what `bambu_sweep.py --workdir` keeps): feature
+  counts, extrusion extent against the bed (brim included), and where the supports are by radius, height and
+  angle sector. Run it before changing geometry to kill a support: it tells you what the support props up.
+- **Geometry without Blender**: `uv run --with manifold3d --with numpy python gen.py` gives exact booleans and
+  volume/bbox assertions as fit checks, with Blender used only for the renders (`blendercad.py` from the
+  exported STLs). Worked example and traps: playbook `headless_blender_3d_design`, "CSG in Python with manifold3d".
 - `stl_to_bambu_3mf.py` packages **one material per run**. Multicolor (AMS Lite) isn't supported
   yet: export one STL per color in a shared frame, import them together in Bambu Studio as a
   single object, and assign a filament to each part.

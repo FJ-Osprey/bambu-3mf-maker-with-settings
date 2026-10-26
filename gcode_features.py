@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gcode_features.py -- what a sliced Bambu plate_1.gcode actually contains: feature line counts, the XY extent of
+gcode_features.py -- what a sliced Bambu plate_1.gcode actually contains: feature block counts, the XY extent of
 every extrusion (does it fit the 180 x 180 bed, brim included), and WHERE the supports are, by radius, height
 and angle around the part. Use it to find out what a stray support cluster is holding up before changing geometry.
 
@@ -37,7 +37,15 @@ def main():
     rx = re.compile(r"X([\d.-]+)")
     ry = re.compile(r"Y([\d.-]+)")
     rz = re.compile(r"Z([\d.-]+)")
+    re_ = re.compile(r"E([\d.-]+)")
+    arcs = 0
     for line in open(a.gcode, errors="replace"):
+        line = line.split(";", 1)[0]
+        if line.startswith("G2") or line.startswith("G3"):
+            me = re_.search(line)
+            if me and float(me.group(1)) > 0:
+                arcs += 1
+            continue
         if line.startswith("; FEATURE:"):
             feat = line.split(":", 1)[1].strip()
             counts[feat] += 1
@@ -45,7 +53,8 @@ def main():
             mz = rz.search(line)
             if mz:
                 z = float(mz.group(1))
-            if "E" not in line:
+            me = re_.search(line)
+            if not me or float(me.group(1)) <= 0:      # travel, retract or wipe
                 continue
             mx, my = rx.search(line), ry.search(line)
             if not (mx and my):
@@ -61,6 +70,8 @@ def main():
                 brim.append(p)
 
     print("feature blocks:", ", ".join(f"{k} {v}" for k, v in counts.most_common()))
+    if arcs:
+        print(f"WARNING: {arcs} G2/G3 arc extrusions ignored (arc fitting is on); extents and centroid undercount")
     if not xs:
         sys.exit("no extrusion moves found")
     x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)

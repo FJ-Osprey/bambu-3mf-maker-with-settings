@@ -160,7 +160,11 @@ the shell", "foot touches the wall") is invariant under "held by nothing": a bra
 straight out along its shaft passed every one. For every mounted or coupled part write down what resists each load
 direction (torque, pull along the shaft, lift, sideways) and assert it in the generator: tabs on a ledge, a screw
 head on a floor, teeth in a wall. Give every geometric check a positive control (a deliberate collision or a removed
-feature that must make it fail), or the check may be blind.
+feature that must make it fail), or the check may be blind. Two blind spots found by mutation on 2026-10-28: a check
+that is symmetric under mirroring the part passes a mount built on the wrong side (only an unrelated "one solid
+piece" check caught it), and nothing in a set of fit checks sees an upside-down print orientation. Assert the side
+(which half-space the locating feature lies in) and the orientation (bed footprint area, the lowest face, which way
+a pocket opens) as their own checks.
 
 ## 6. Adhesives on PLA (looked up 2026-10-27)
 

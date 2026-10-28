@@ -144,13 +144,16 @@ the assembler to scrape support nubs off the wall under the seat.
 
 **A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
 the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. With both halves
-already printed: glue small blocks (about 16 × 14 × 8 mm, outer face a sphere of the inner wall's radius) to the
+already printed: glue small blocks (about 16 × 16 × 8 mm, outer face a sphere of the inner wall's radius, and at
+least 2 mm of block beyond the pilot on every side, which the first version did not have) to the
 inside of the lipped half, each sitting behind the lip, with a 2.5 mm pilot pointing at the centre. With the other
 half on, drill 2.5 mm from outside through the overlap (outer skin, lip, block) and drive an M3 screw. The shank
 crosses the seam, so the halves cannot slide apart; the head clamps both skins to the block; the screw pulls the block
 onto the wall, so the glue line is in compression, not peel. Drill after gluing, so the block's position never has to
 be exact. Give the block a hex pocket on its inner face for a nut when the PLA thread wears. Put the screws where
-nothing else sits on the shell: a hat's seat, a stand's rim, a cable hole.
+nothing else sits on the shell: a cap or lid seat, a stand's rim, a cable hole. And plan the assembly order in the
+generator too: a coupling that needs a few millimetres of travel to press together cannot be pressed inside the
+shell; sweep the whole assembled unit along its insertion path and assert it clears.
 
 **Retention: check each load direction, not just clearance.** A set of clearance checks ("no overlap", "clear of
 the shell", "foot touches the wall") is invariant under "held by nothing": a bracket that let the servo lift

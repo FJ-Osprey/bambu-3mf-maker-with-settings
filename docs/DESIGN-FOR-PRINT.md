@@ -196,7 +196,12 @@ feature that must make it fail), or the check may be blind. Two blind spots foun
 that is symmetric under mirroring the part passes a mount built on the wrong side (only an unrelated "one solid
 piece" check caught it), and nothing in a set of fit checks sees an upside-down print orientation. Assert the side
 (which half-space the locating feature lies in) and the orientation (bed footprint area, the lowest face, which way
-a pocket opens) as their own checks.
+a pocket opens) as their own checks. Two more from the same day's reviews: a check that reads the same with a
+mechanism open as closed (a pin that "opens" by zero millimetres still passed "open clears the lower block") cannot
+see a mechanism that never opens, so assert the state change itself (pin out of the lower tunnel, with a not-quite
+position as the control); and when identical printed copies of a chiral part are placed at several sites, the
+generator must not mirror the part at any site, because the printed copies cannot build the mirror. Model each
+site's arrangement with the one part as printed.
 
 ## 6. Adhesives on PLA (looked up 2026-10-27)
 

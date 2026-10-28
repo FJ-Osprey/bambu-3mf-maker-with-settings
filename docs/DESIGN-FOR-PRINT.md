@@ -8,6 +8,28 @@ generic (this repo is public): what was measured, on what printer and material, 
 Tooling and workflow live elsewhere: `CLAUDE.md` in this repo (headless Blender, manifold3d CSG, 3MF packaging,
 `bambu_sweep.py`, `gcode_features.py`). This file is the engineering side.
 
+## 0. Design for the builder: walk this list before publishing any part
+
+The person printing and assembling the part is not the person who modelled it, may be new to the vocabulary, and
+has only what is on the bench. Every one of these was learned by getting it wrong on a live build (2026-10-28).
+
+1. **Tools and hardware in hand only.** Ask what the builder has (drill? screws, which sizes? glue, which kinds?
+   magnets? Velcro?) before designing anything that needs it. Never require drilling a printed part: holes are
+   printed. Never specify screws, nuts or inserts that were not confirmed in hand. The servo's own bag of screws
+   and a hot-glue gun are a safe baseline; everything else is a question.
+2. **Every part has a place to sit.** Name the printed feature it registers against (section 5). "Glue it where it
+   lands" is not a design.
+3. **What holds it, in each load direction**, and what lets it come out again (section 5). Anything that hides a
+   mechanism gets a repeatable, tool-free closure.
+4. **Assembly order and insertion path.** Build the sequence step by step and sweep each moving-in part along its
+   path in the generator; a coupling that needs millimetres of travel to press together cannot be pressed in place.
+5. **Already-printed parts are fixed.** When a shell is printed, locate and fasten new parts on features it already
+   has (a hole, a rim, a lip, an existing cut-out); don't plan a reprint of a long part as the fix.
+6. **Test pieces prove something,** are as stiff as what they stand for, and the instructions say what "right" looks
+   like (section 1).
+7. **Instructions in plain words**, every term defined the first time (spline, horn, pocket, coupon, lip, pilot), a
+   labelled picture per mechanism, and a one-line answer to "what do I print now".
+
 ## 1. Fits and tolerances
 
 - **Printed holes come out smaller than modelled.** Rules of thumb from several tolerance guides: 0.1-0.3 mm under
@@ -143,17 +165,25 @@ model). State the lever from the seat to the working point, because any seat err
 the assembler to scrape support nubs off the wall under the seat.
 
 **A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
-the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. With both halves
-already printed: glue small blocks (about 16 × 16 × 8 mm, outer face a sphere of the inner wall's radius, and at
-least 2 mm of block beyond the pilot on every side, which the first version did not have) to the
-inside of the lipped half, each sitting behind the lip, with a 2.5 mm pilot pointing at the centre. With the other
-half on, drill 2.5 mm from outside through the overlap (outer skin, lip, block) and drive an M3 screw. The shank
-crosses the seam, so the halves cannot slide apart; the head clamps both skins to the block; the screw pulls the block
-onto the wall, so the glue line is in compression, not peel. Drill after gluing, so the block's position never has to
-be exact. Give the block a hex pocket on its inner face for a nut when the PLA thread wears. Put the screws where
-nothing else sits on the shell: a cap or lid seat, a stand's rim, a cable hole. And plan the assembly order in the
-generator too: a coupling that needs a few millimetres of travel to press together cannot be pressed inside the
-shell; sweep the whole assembled unit along its insertion path and assert it clears.
+the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. Nothing on the
+other half faces the direction it comes off in (every face in a lip joint faces the same way), so a positive lock
+needs either a hole through that half or a part that goes round the seam. With both halves already printed and no
+drill, the all-printed answer is a **pinned latch**: at two places on the seam, a clip glued to each half carries a
+small block that reaches over the seam (0.3 mm above the other half); the two blocks sit side by side along the
+seam, each with a tunnel through it, and a printed pin slides along the seam through both. The pin ties the blocks
+together across the seam with 0.4 mm of play, so the halves cannot slide apart; push the pin out of one block and
+the shell opens. Put the pin's head uphill of the upper block and bigger than the tunnel, so gravity holds it
+closed, and make the upper tunnel longer than the pin's travel, so it stays captive when open. Assembly is
+self-aligning: glue one clip, hang the other on the pin, close the shell, glue the second clip. Checks that matter:
+each clip's contact is on its own half only; the pin sits in both tunnels and clears the shell; the far half moved
+±1 mm along its come-off direction collides with the pin (the lock), with a control where it does not; the pin
+pushed open clears the far block and is still inside the near tunnel; the pin pushed downhill hits the near block
+(the gravity stop). When a drill and screws are in hand, the simpler version is blocks (16 × 16 × 8, at least 2 mm
+beyond the pilot on every side) glued inside behind the lip and M3 screws through the overlap, drilled after gluing
+so the block's position never has to be exact. Either way, put the latches where nothing else sits on the shell: a
+cap or lid seat, a stand's rim, a cable hole. And plan the assembly order in the generator: a coupling that needs
+a few millimetres of travel to press together cannot be pressed inside the shell; sweep the whole assembled unit
+along its insertion path and assert it clears.
 
 **Retention: check each load direction, not just clearance.** A set of clearance checks ("no overlap", "clear of
 the shell", "foot touches the wall") is invariant under "held by nothing": a bracket that let the servo lift

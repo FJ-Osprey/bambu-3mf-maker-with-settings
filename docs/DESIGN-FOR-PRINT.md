@@ -24,8 +24,14 @@ Tooling and workflow live elsewhere: `CLAUDE.md` in this repo (headless Blender,
   the teeth bite.
 - **Print a coupon in the same orientation as the feature,** with three sizes bracketing the guess, marked by notch
   counts (text in CSG is a chore; one, two, three notches is not). It costs ten minutes and saves the hour-long part.
-  Worked examples: a three-width fit coupon (`phone-kickstand/generate.py`), a rim-joint coupon and the
-  three-pocket spline coupon described below.
+  Worked examples: a three-width fit coupon (`phone-kickstand/generate.py`) and the three-pocket spline coupon
+  described below.
+- **A coupon has to be as stiff as the feature it stands for, or it proves nothing.** An 8 mm tall ring sliced off a
+  170 mm rim flexes in the hand, so pushing two such rings together tells you nothing about how the rigid halves
+  will fit; the person holding them sees them squash and rightly asks what the test is for (2026-10-28). For a big
+  joint, print the first half and trial-fit the other half's rim coupon on the real part, or accept that the halves
+  themselves are the test. Say in the instructions what a coupon is and what result counts as right; the person
+  printing it may never have heard the word.
 - **Data point (2026-10-27, A1 mini, yellow PLA, 0.2 mm layers):** a 4.5 mm modelled hole with a horizontal axis,
   3 mm long, took a 21-tooth metal micro-servo spline (about 4.8 mm across the tips) with hand force and held with
   no visible crack. The spline's root is near 4.4 mm, so this fit was stretching the hub as well as cutting grooves;
@@ -117,15 +123,41 @@ holes for the servo's own tab screws. Pocket clearance 0.4 mm a side modelled. T
 same centreline, so the pilots must stop at least 2 mm above the lead notch; with a case 17.5 mm below the tabs and
 7 mm pilots that leaves about 2 mm of solid, and a tab screw longer than about 9.5 mm then bottoms out (measure the
 screws; the bag's lengths vary by clone). A pocket that merely wraps the case, with a zip-tie groove that never
-reaches the case, holds nothing (section 5).
+reaches the case, holds nothing (section 5). And the pocket block itself must sit on something that locates it: a
+foot on a curved shell does not (section 5).
 
-## 5. Retention: check each load direction, not just clearance
+## 5. Location and retention: every part needs a place to sit, and a check per load direction
 
-A set of clearance checks ("no overlap", "clear of the shell", "foot touches the wall") is invariant under "held by
-nothing": a bracket that let the servo lift straight out along its shaft passed every one. For every mounted or
-coupled part write down what resists each load direction (torque, pull along the shaft, lift, sideways) and assert
-it in the generator: tabs on a ledge, a screw head on a floor, teeth in a wall. Give every geometric check a positive
-control (a deliberate collision or a removed feature that must make it fail), or the check may be blind.
+**Location before retention.** Every internal part needs a printed feature it registers against: a hole, a slot, a
+rim, a step. A foot "shaped to the inner wall" of a sphere locates nothing, because a sphere has the same curvature
+everywhere, so "epoxy it where it lands" means holding the part by hand, in position, while the glue cures. That was
+rejected on a build as not assemblable (2026-10-28), after the shell was already printed. The fix that needed no
+reprint of the shell: hang the mount off a plug that fits a hole the shell already has. An elliptical plug in an
+elliptical hole at a 0.15 mm fit cannot rotate; a flange whose back is a sphere of the wall's radius seats on the
+wall round the hole and fixes the other three degrees of freedom; a strut from that flange carries the mount. Glue
+then does retention only (it stops the plug backing out; the hole gives no grip against that), with nothing to hold
+still while it cures, and hot glue is enough because the hole, not the glue, carries the position. Assert it in the
+generator: the plug fills its hole and a plug 0.1 mm fatter collides; the seat has a stated area on the wall; nothing
+else on the part touches the shell (a second contact point over-constrains against a shell that is not exactly the
+model). State the lever from the seat to the working point, because any seat error is multiplied by it, and tell
+the assembler to scrape support nubs off the wall under the seat.
+
+**A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
+the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. With both halves
+already printed: glue small blocks (about 16 × 14 × 8 mm, outer face a sphere of the inner wall's radius) to the
+inside of the lipped half, each sitting behind the lip, with a 2.5 mm pilot pointing at the centre. With the other
+half on, drill 2.5 mm from outside through the overlap (outer skin, lip, block) and drive an M3 screw. The shank
+crosses the seam, so the halves cannot slide apart; the head clamps both skins to the block; the screw pulls the block
+onto the wall, so the glue line is in compression, not peel. Drill after gluing, so the block's position never has to
+be exact. Give the block a hex pocket on its inner face for a nut when the PLA thread wears. Put the screws where
+nothing else sits on the shell: a hat's seat, a stand's rim, a cable hole.
+
+**Retention: check each load direction, not just clearance.** A set of clearance checks ("no overlap", "clear of
+the shell", "foot touches the wall") is invariant under "held by nothing": a bracket that let the servo lift
+straight out along its shaft passed every one. For every mounted or coupled part write down what resists each load
+direction (torque, pull along the shaft, lift, sideways) and assert it in the generator: tabs on a ledge, a screw
+head on a floor, teeth in a wall. Give every geometric check a positive control (a deliberate collision or a removed
+feature that must make it fail), or the check may be blind.
 
 ## 6. Adhesives on PLA (looked up 2026-10-27)
 

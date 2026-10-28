@@ -6,3 +6,5 @@ prompts/
 needoh-2
 phone-kickstand/*.stl
 handoffs/
+.memsearch/
+.DS_Store

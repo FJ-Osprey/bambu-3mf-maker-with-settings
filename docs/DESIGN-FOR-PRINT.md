@@ -116,9 +116,11 @@ diameter and height, where the lead leaves the case, and the three screws' lengt
 2. **Printed hub with a blind round pocket pressed onto the spline, plus the horn screw through the pocket floor.**
    The same joint as a stock horn, in PLA. Used on an animatronic jaw (2026-10-28, not yet printed and tested as
    this is written): hub 16 mm across and 6 mm thick, pocket 4.6 mm modelled and 0.5 mm shallower than the spline
-   height (so the floor seats on the spline top and the screw clamps it there; a deeper pocket would leave the floor
-   floating and the screw would bend it, and a pocket deeper than the real spline is the failure to design out, so
-   measure the spline height first), 2.2 mm screw hole, 2.5 mm floor. A three-pocket coupon (4.5 / 4.6 / 4.7) in the
+   height as first modelled (so the floor seats on the spline top and the screw clamps it there; a deeper pocket would
+   leave the floor floating and the screw would bend it, and a pocket deeper than the real spline is the failure to
+   design out, so measure the spline height first: on the servo in hand it was 4.8 mm, not the 4 mm of the usual
+   figures, and the 3.5 mm pocket already printed was kept, leaving the hub face 1.3 mm off the housing), 2.2 mm
+   screw hole, 2.5 mm floor. A three-pocket coupon (4.5 / 4.6 / 4.7) in the
    same print orientation picks the size, and the horn screw is tried through the coupon's floor before the part is
    printed. The screw is the axial retention; the teeth take the torque.
 3. **Bare press fit with no screw.** Nothing stops it working off the shaft. Don't.
@@ -173,7 +175,7 @@ small block that reaches over the seam (0.3 mm above the other half); the two bl
 seam, each with a tunnel through it, and a printed pin slides along the seam through both. The pin ties the blocks
 together across the seam with 0.4 mm of play, so the halves cannot slide apart; push the pin out of one block and
 the shell opens. Put the pin's head uphill of the upper block and bigger than the tunnel, so gravity holds it
-closed, and make the upper tunnel longer than the pin's travel, so it stays captive when open. Assembly is
+closed, and make the pin longer than its opening travel plus the uphill tunnel, so it stays in that tunnel when open (a 30 mm pin, 15 mm of travel, a 12 mm tunnel). Gravity returns the pin on release, so one latch per seam is better than two where the lip joint already keeps the halves aligned: opening then takes one hand on the pin and one on the shell. Print a spare set; the clips are identical and go on either half. Assembly is
 self-aligning: glue one clip, hang the other on the pin, close the shell, glue the second clip. Checks that matter:
 each clip's contact is on its own half only; the pin sits in both tunnels and clears the shell; the far half moved
 ±1 mm along its come-off direction collides with the pin (the lock), with a control where it does not; the pin

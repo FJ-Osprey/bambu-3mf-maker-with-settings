@@ -9,6 +9,11 @@
   Blender tooling. Most of that tooling is Roblox round-trip handling; only the headless approach carries over.
 - Playbook `bambu_3mf_workflow`: STL + settings markdown to a Bambu Studio `.3mf`.
 - Worked examples: `pirate-shedletsky/generate.py`, `phone-kickstand/generate.py`.
+- **`docs/DESIGN-FOR-PRINT.md`: the engineering rules.** Hole shrink and fit clearances, coupons, published PLA
+  numbers and what to design with, screws in PLA, micro-servo couplings and mounts, retention checks in the load
+  direction, adhesives. Read it before designing a part that has to fit or hold something, and **add what you learn
+  to it in the same session**: it is the one place design-for-print knowledge is collected (the playbooks above hold
+  tooling and workflow). Public repo: generic wording, no project paths or personal details.
 
 ## Tools
 

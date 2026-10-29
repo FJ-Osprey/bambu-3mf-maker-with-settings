@@ -160,6 +160,14 @@ the start. Lessons, in the order they would have saved the most time:
   printed ticks (entry and locked) on the outside cost nothing.
 - Review before printing paid for itself: two independent passes on a one-page spec found the welded detent, the
   false seat, the post root and the symmetry; none of these had a failing check.
+- **And the reviewed version still failed in the hand**, for a reason both reviewers had flagged and the designer
+  deferred: the pocket floor was set from the seat depth read off the model (0.35 mm), never measured on a print, and
+  the lug stopped at the pocket's mouth. Two rules from that: (1) **a pocket that holds a part axially should set
+  both axial directions itself**, floor and roof with the part's thickness plus a few tenths between them and lead-ins
+  at the mouth, so the rest of the assembly's seat depth does not matter; (2) **a pocket the builder cannot see into
+  from any side will be used wrong**: a closed box with one obvious open mouth reads correctly in the slicer and in
+  the hand, an open channel whose slot is hidden under a flare does not. If a number the design depends on is
+  "unverified", the coupon that measures it comes before the coupon that depends on it.
 
 What the research found for the alternatives, for the record: large printed
 threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and

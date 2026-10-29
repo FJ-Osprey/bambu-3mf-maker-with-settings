@@ -148,7 +148,12 @@ travel on the bench before fitting the mechanism.
 holes for the servo's own tab screws. Pocket clearance 0.4 mm a side modelled. The pilot and the lead exit sit on the
 same centreline, so the pilots must stop at least 2 mm above the lead notch; with a case 17.5 mm below the tabs and
 7 mm pilots that leaves about 2 mm of solid, and a tab screw longer than about 9.5 mm then bottoms out (measure the
-screws; the bag's lengths vary by clone). A pocket that merely wraps the case, with a zip-tie groove that never
+screws; the bag's lengths vary by clone). **The lead exit must be open to the top of the pocket.** A notch at the
+floor alone cannot be used: the pocket is 0.4 mm bigger than the case, so the plug would have to be threaded out
+through the notch before the servo goes in, down the depth of the pocket, by feel; a builder stopped there (2026-10-28).
+Cut the end wall open from the ledge down to the notch on one side of the pilot (a 2.5 mm wall left round the pilot
+is enough), so the lead lays in from above as the servo is lowered. Do it at both ends when it is not known which
+end of the case the lead leaves. A pocket that merely wraps the case, with a zip-tie groove that never
 reaches the case, holds nothing (section 5). And the pocket block itself must sit on something that locates it: a
 foot on a curved shell does not (section 5).
 
@@ -172,7 +177,10 @@ the assembler to scrape support nubs off the wall under the seat.
 the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. Nothing on the
 other half faces the direction it comes off in (every face in a lip joint faces the same way), so a positive lock
 needs either a hole through that half or a part that goes round the seam. With both halves already printed and no
-drill, the all-printed answer is a **pinned latch**: at two places on the seam, a clip glued to each half carries a
+drill, one all-printed answer is a **pinned latch** with glued clips. It was rejected at the bench the same day it was
+designed ("you glue clips on and then lock them with a peg?"): if a part can be reprinted, the latch belongs in the
+part, and the builder would rather reprint 16 hours of halves than glue add-ons. The printed-in answer is the snap
+latch in the next paragraph; the pinned latch is kept here for the case where a reprint is truly impossible: at two places on the seam, a clip glued to each half carries a
 small block that reaches over the seam (0.3 mm above the other half); the two blocks sit side by side along the
 seam, each with a tunnel through it, and a printed pin slides along the seam through both. The pin ties the blocks
 together across the seam with 0.4 mm of play, so the halves cannot slide apart; push the pin out of one block and
@@ -188,6 +196,29 @@ so the block's position never has to be exact. Either way, put the latches where
 cap or lid seat, a stand's rim, a cable hole. And plan the assembly order in the generator: a coupling that needs
 a few millimetres of travel to press together cannot be pressed inside the shell; sweep the whole assembled unit
 along its insertion path and assert it clears.
+
+**Snap latch printed into a two-half shell (2026-10-28).** The constraint first: both halves print rim-down (one on
+its lip, one on its rim), so no integral feature can cross the seam plane; anything past it is below the bed. What
+can be printed is a hook on the back half that reaches exactly to the seam plane, and a catch bar on the front half
+inside the lip's own extent (the lip already stands past the seam). Lay the hook's **arm along the seam**, not out
+from the wall: an arm that stands along Z bends across its layers and cracks (Formlabs' snap-fit guide and the
+Hackaday enclosure write-ups say so, and the published across-layer numbers in section 2 agree); an arm lying on the
+bed has its layers along its length and flexes in-plane, where PLA's elongation is 12 % rather than 7.5 %. Numbers
+that passed the generator's checks on a 170 mm sphere with a 3 mm wall, three sites: arm 1.8 mm thick (radial), 8 mm
+along the axis, 22 mm long with a 19 mm free length; barb 6 mm long at the free end, crest 0.3 mm under the lip, 45°
+entry ramp and 45° catch face; bar under the lip 10 mm long, 2.5 mm along the axis, reaching 2 mm in from the lip,
+45° catch face; deflection 2.0 mm, strain 1.5·t·δ/L² = 1.5 %, about 8.5 N per hook, so about 45 N to part or close
+three (pull-release; a 90° catch needs an outside release, and there is none at a covered seam). Revolve the profiles
+about the seam's axis: a 30 mm feature on an 85 mm sphere is 2.5 mm off a flat box, and fuse parts with a 0.5 mm
+overlap, since faces that merely touch do not union after a rotation. Checks: closed, nothing touches; the back half
+moved 1 mm off hits every bar and 0.2 mm hits none; the hook with its barb pressed in by the deflection sweeps in
+along the axis without touching the front, and the unpressed barb does hit; the hooks' feet and the bars' feet are
+at the bed plane, nothing past it; strain under 2.5 %. Print a coupon first: a short arc of each rim with one hook
+and one bar, pushed together by hand. What the research found for the alternatives, for the record: large printed
+threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and
+bayonets work (twist-lock containers; 3–4 lugs, 0.3–0.5 mm running gaps, a detent against back-off), but both turn
+one half relative to the other, which a seam-crossing cable or a feature straddling the seam rules out, and a smooth
+ball gives no grip for the twist.
 
 **Retention: check each load direction, not just clearance.** A set of clearance checks ("no overlap", "clear of
 the shell", "foot touches the wall") is invariant under "held by nothing": a bracket that let the servo lift

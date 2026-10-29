@@ -77,7 +77,10 @@ inside jaws of the calipers (the small upper pair) read a hole's diameter; take 
 - **Snap ladder** (clips 1-5, 0.7-3.6 % strain): push each clip arm first into the keeper's channel (picture) until it
   clicks, pull it out by pressing the arm tip toward the channel's middle, ten times. For each: clicked / held when
   pulled / turned white at the bend / cracked, and after how many cycles. The highest clip that survives ten cycles
-  without whitening is this filament's working snap strain; the doc's guess for PLA is 1-2 %.
+  without whitening is this filament's working snap strain; the doc's guess for PLA is 1-2 %. The strains are
+  computed with L = 13 mm, root to the catch face; full deflection is reached 1 mm further on, so the true strains are
+  up to about 14 % lower, and at L/t ≈ 8 the formula is approximate (section 5): read the ladder as a ranking with
+  rough values. Correction (2026-10-29, review): this caveat was missing.
 
 Write the results in the table below (date, filament, the reading), then move each item off the "not yet measured"
 list on the entry page, and change the starting numbers in sections 1, 3 and 5 to the measured ones, marked

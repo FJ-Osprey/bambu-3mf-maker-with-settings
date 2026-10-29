@@ -22,8 +22,9 @@ printed parts are not).
   for plastic on plastic; no published figure for printed PLA, whose layer texture likely raises it). The same formula
   with the catch-face angle gives the pull-off force: a 90° catch face does not release by pulling; a 45° one does.
 - **Annular snap** (a ring over a bead): allowed undercut y = ε · d, with d the diameter at the joint.
-- **Strain limits**. Moulded plastics: polycarbonate 4 %, PC/ABS 2.5 %, ABS 6-7 % for one assembly; **use 60 % of the
-  table value for joints that are opened and closed often** (Bayer). Printed parts have no measured figure; the
+- **Strain limits**. Moulded plastics, one assembly: polycarbonate 4 %, PC/ABS 2.5 % (Bayer), ABS 6-7 % (BASF);
+  **use 60 % of the table value for joints that are opened and closed often** (Bayer). Correction (2026-10-29, review): ABS 6-7 % is BASF's
+  table, not Bayer's. Printed parts have no measured figure; the
   guides' working values for an arm printed flat: **PLA about 1-2 %, PETG about 3-4 %** (Loftsmith; CLT 3D; minicad;
   3dprinterstuff; layerx3d) (*disputed*: one guide says PLA 4-8 %, which is near its break strain). Halve it for an
   arm that bends across its layers, and don't build one that way: Formlabs and Hubs both say a cantilever built

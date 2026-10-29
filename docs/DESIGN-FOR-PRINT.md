@@ -82,7 +82,7 @@ chosen and why the ones above it did not fit.
    threaded insert (a brass insert melted into a printed hole with a soldering iron). All three holes are printed.
    Measured in PLA (CNC Kitchen): an M3 self-tapper pulls out at about 140 kg but strips at about 1 N·m and wears out
    after a few reassemblies; an insert holds 150-200 kg and survives reassembly; a nut in a bottom trap held 166 kg
-   (*settled* as trends, one lab; section 3). Only design around screws, nuts or inserts the builder has confirmed.
+   in PETG (*untested here*: one lab's trends; section 3). Correction (2026-10-29, review): the nut-trap figure is PETG, not PLA. Only design around screws, nuts or inserts the builder has confirmed.
 5. **Glue, as the clamp, never the locator.** A printed feature (socket, tongue and groove, pins, a step) puts the
    parts in position; glue only stops them leaving. Then there is nothing to hold still while it cures. Best quick test
    numbers on PLA: CA about 10 MPa, 5-minute epoxy about 6 MPa (Prusa, one sample each; section 6). Glue peels far

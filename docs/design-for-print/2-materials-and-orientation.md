@@ -36,7 +36,7 @@ across-layers case.
 
 - **PLA**: stiffest and strongest in short tests (flat hooks: PLA 73 kg, ASA 57, PETG 55; stiffness 3300 vs 2300 vs
   1900 MPa, CNC Kitchen), easy to print, accurate. Brittle: it snaps rather than bends. Creeps the worst of the common
-  plastics under a sustained load (short-term creep study in Strojniški vestnik). Softens from about 55-60 °C (a car in
+  plastics under a sustained load (one short-term creep study, Strojniški vestnik; *untested here*). Softens from about 55-60 °C (a car in
   the sun, a hot enclosure, near a lamp). Good for: rigid parts, enclosures, anything at room temperature and lightly
   loaded.
 - **PETG**: tougher (it bends and yields before it breaks; "never snapped through, just stretched"), takes about twice
@@ -58,14 +58,15 @@ relaxes; a latch held bent relaxes). Form holds, friction doesn't: teeth, ledges
 ## Slicer settings that matter for strength
 
 - **Walls before infill.** More perimeters raise strength more than more infill: hooks with 2 walls held 20 kg, 4 walls
-  33 kg, at the same infill (CNC Kitchen) (*settled*). Thin features (snap arms, pins under about 4 mm) end up solid
+  33 kg, at the same infill (CNC Kitchen) (*settled* direction; the numbers are one lab's). Thin features (snap arms, pins under about 4 mm) end up solid
   walls anyway; give them 3-4 walls.
 - **Infill** matters for thick parts: PLA bars bent at 61 MPa with 30 % infill, 91 MPa at 100 % (PETG 49 vs 72; CNC
   Kitchen, "3D prints or wood"). Pattern matters less; gyroid or cubic at 15-30 % is the usual default (*disputed* in
   the details).
 - **Hotter prints bond layers better**: standing PLA bars went from 20 MPa at 190 °C to about 40 MPa at 210-230 °C;
   PETG peaked near 230-245 °C (CNC Kitchen, 2020, one filament). Print at the upper half of the filament's range for
-  strength, dry filament, and less part cooling helps layer bond (*settled* direction).
+  strength, dry filament, and less part cooling helps layer bond (*settled* direction, one lab's numbers).
+  Correction (2026-10-29, review): several one-lab results here were tagged settled without that qualifier.
 - **Wider lines** (up to about 150 % of the nozzle) bond layers better (CNC Kitchen, 2019).
 - **Brick layers** (Bambu Studio/Orca option that staggers walls) gained 10-14 % layer adhesion in one test (CNC
   Kitchen, 2024) (*untested here*).

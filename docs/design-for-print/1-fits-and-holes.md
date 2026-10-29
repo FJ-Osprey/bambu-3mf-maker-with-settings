@@ -19,11 +19,11 @@ below says which.
   (Rahix "Design for 3D printing"; Syntax3D Lab) (*settled* for the teardrop, roof number *untested here*).
 - **The slicer's hole compensation.** Bambu Studio's `xy_hole_compensation` grows every closed hole outline by the
   value entered, **per side**, so the diameter grows by twice it: a hole printing 0.15 mm small wants 0.075, not 0.15
-  (Bambu wiki, XY hole/contour compensation; Premy, checked against the Bambu Studio source) (*settled*). It only
+  (Bambu wiki, XY hole/contour compensation; Premy, checked against the Bambu Studio source) (*settled*: the wiki itself was re-read in review and confirms the doubling). It only
   sees holes that are closed rings in a layer: horizontal holes, slots open to an edge and cross-holes get nothing,
   so those are fixed in the model. Compensate in the model or in the slicer, never both. Bambu's calibration
   procedure measures printed holes against known metric screws (M6 gives the best reading; an M6 hole printed at
-  5.66 mm, 0.24 mm under, in Bambu's own example) and is per filament. `xy_contour_compensation` does the same to
+  5.66 mm, 0.34 mm under, in Bambu's own example; Correction (2026-10-29, review): was written 0.24, which is 6 − 5.66 done wrong) and is per filament. `xy_contour_compensation` does the same to
   outer outlines only.
 - **First-layer squish closes small holes.** A 1.5 mm round hole on the first layer can close under elephant's foot
   (the first layer spreading wider than the rest); 2.0 mm holes stayed open (measured here). Slots survive better
@@ -43,7 +43,9 @@ below says which.
 
 ## Clearances and fits
 
-Starting points to put on a coupon, not final sizes (*disputed* across guides by a factor of two, *untested here*):
+Starting points to put on a coupon, not final sizes (*disputed* across guides by a factor of two, *untested here*).
+The free-running and sliding sources don't say whether they mean per side or diametral; read them as diametral and
+let the coupon decide. Correction (2026-10-29, review): the hinge row was a per-side figure in a diametral column.
 
 | Fit | Diametral clearance (+) or interference (−) | Sources |
 |---|---|---|
@@ -52,7 +54,7 @@ Starting points to put on a coupon, not final sizes (*disputed* across guides by
 | Snug (locates, no play) | +0.15 to +0.2 mm | same |
 | Light press (removable) | −0.05 to −0.1 mm | minicad; Syntax3D Lab |
 | Permanent press | −0.1 to −0.2 mm | minicad; Weerg; mensa3d |
-| Print in place (hinges) | +0.3 mm per gap start; 0.2 on a tuned printer | Prusa KB "at least 0.3 for moving parts"; Loftsmith; buildcad |
+| Print in place (hinges) | per side (radial) 0.3 mm to start, 0.2 on a tuned printer, so about +0.6 diametral | Prusa KB "at least 0.3 for moving parts"; Loftsmith; buildcad |
 
 - **Outer edges print slightly large** (+0.05 to +0.15 mm) while holes print small, so a printed peg in a printed hole
   loses fit from both sides (x3dstudios; rapiddirect) (*settled* direction).

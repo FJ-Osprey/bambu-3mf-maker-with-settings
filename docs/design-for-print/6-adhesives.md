@@ -22,7 +22,7 @@ Back to the [entry point](../DESIGN-FOR-PRINT.md). Tags: *settled*, *disputed*, 
 | CA (super glue), medium viscosity | about 10 MPa PLA, 13 MPa PETG | close-fitting joints, magnets in pockets | brittle under ongoing stress and across gaps; full strength after 8-24 h |
 | 5-minute epoxy | about 6 MPa PLA, 5 MPa PETG | gap filling, larger faces, magnets | weaker than the best CA on smooth coupons in this test; tougher in peel per other guides; full cure before load |
 | Hot glue | not tested | tacking unloaded parts, holding wires | not a structural joint; peels off with a knife; don't use it on magnets (heat weakens them) |
-| Polystyrene model cement | 0 MPa on PETG | nothing | |
+| Polystyrene model cement | one product 0 MPa on PET and ASA; another 3.2 MPa PLA, 3.4 MPa PET | not structural | Correction (2026-10-29, review): the earlier "0 MPa, nothing" was one product |
 
 (*untested here*: one quick, unreplicated test; the ranking between CA and epoxy depends on the joint type.)
 

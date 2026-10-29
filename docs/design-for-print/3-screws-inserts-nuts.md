@@ -66,7 +66,7 @@ taken apart repeatedly or tightened hard; a nut trap when there are nuts but no 
   11.5 % (one study, Ender-3, 100 % infill) (*disputed*: single study with internal inconsistencies). Short screws in
   thin plastic lose a larger share, because nearly all the preload is stored by squashing the plastic, not by
   stretching the screw (Jönköping University machine-elements notes, a calculation).
-- Countermeasures: a washer under the head (a 7 mm washer for M3 nearly triples the bearing ring), the longest screw
+- Countermeasures: a washer under the head (a 7 mm washer under an M3 head about doubles the bearing area; Correction (2026-10-29, review): "nearly triples" did not survive the arithmetic), the longest screw
   that fits, a metal compression sleeve where the load is high (*settled* engineering practice; no printed-part tests).
 
 ## Sources

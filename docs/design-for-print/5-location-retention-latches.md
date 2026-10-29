@@ -130,7 +130,38 @@ half each side of every bar, a few tenths off its ends, with a check that a 1 mm
 And a **coupon of a multi-site ring joint is the ring**, not one site: a one-site arc pivots about its one hook, so
 it cannot be judged, and its arcs flex apart to let the barb pass where the ring cannot (the stiffness rule in
 section 1). Two full hoops of the rims, every site, cable hole filled, cost about 35 g and an hour each and answer
-the question the halves would. What the research found for the alternatives, for the record: large printed
+the question the halves would. **Postscript (2026-10-29): the push-on snap was replaced by a twist-lock, and why.** Two full-hoop coupons of the
+push-on snap showed what the one-site arcs had hidden: three preloaded cantilever hooks need about 47 N to close on a
+ring that cannot flex, nothing resisted a twist about the seam axis, and the builder had pictured a twist lock from
+the start. Lessons, in the order they would have saved the most time:
+- **Agree the motion before the geometry.** Write the joint as the hands will do it (set on, turn this way this far,
+  feel this, stop here; reverse to open) and draw it in two or three states from where the builder's eyes are, before
+  any solid exists. The push-on snap passed every check and was the wrong mechanism.
+- **Form holds, a spring only indexes.** On a seam with no outside access, a bayonet-type lock is better than a snap:
+  lugs under the front lip turn a few degrees into channels on the back half, a stop ends the turn, and a light
+  detent (a cantilever along the seam, bending radially, in-plane, with 30° ramps *along the turn* both ways) only
+  keeps it from turning back. Numbers that passed: lug 8 mm, 12° of turn, detent 1.68 thick (four 0.42 mm walls, no
+  gap fill) × 8 × 20 mm free, 0.6 mm engagement, strain 0.4 %, about 2.7 N tangential per site, 0.66 N·m for three,
+  8 N at the equator of a 170 mm ball, same to unlock, detent relaxed when locked.
+- **Find the true seat.** A rim with a 45° outer chamfer and no flat face at the parting plane seats where the other
+  rim's corner meets the cone, 0.35 mm deeper than the model's plane here. Every axial clearance was wrong by that
+  until a check pushed one shell into the other and found first contact. Then make the retainer's flat top the axial
+  seat (a layer-accurate top face in both prints) instead of a stepped cam into the stiffest part of a cantilever.
+- **Root a retainer along its length, not off a post.** A tongue hung from a post loads the post across its layers,
+  and a post bonded to the wall only above the rim's inner chamfer has a few mm of bond: the same root as the stop
+  blocks a builder snapped off by hand. A C-channel (flange under the lug, web inside it, 45° flare into the wall)
+  carries the pull over its whole length at about 1 MPa.
+- **Two parts on the bed less than a line width apart are one part.** A spring finger's free end 0.08 mm from a fixed
+  feature would have printed welded; keep 1 mm or more, and check it with the finger relaxed and bent.
+- **Break the symmetry.** Three identical sites at 120° let the front lock turned 120°; move one site 10° (poka-yoke).
+- **Widen whatever crosses the parting line** for the turn (here the cable notch, by the entry offset), and sweep
+  the moving half's features through the approach and the turn against everything inside, not only the locked state.
+- **Give coupons an index.** Full hoops with no cable notch could be "locked" against the next site's root; two
+  printed ticks (entry and locked) on the outside cost nothing.
+- Review before printing paid for itself: two independent passes on a one-page spec found the welded detent, the
+  false seat, the post root and the symmetry; none of these had a failing check.
+
+What the research found for the alternatives, for the record: large printed
 threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and
 bayonets work (twist-lock containers; 3–4 lugs, 0.3–0.5 mm running gaps, a detent against back-off), but both turn
 one half relative to the other, which a seam-crossing cable or a feature straddling the seam rules out, and a smooth

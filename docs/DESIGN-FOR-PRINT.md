@@ -15,8 +15,10 @@ has only what is on the bench. Every one of these was learned by getting it wron
 
 1. **Tools and hardware in hand only.** Ask what the builder has (drill? screws, which sizes? glue, which kinds?
    magnets? Velcro?) before designing anything that needs it. Never require drilling a printed part: holes are
-   printed. Never specify screws, nuts or inserts that were not confirmed in hand. The servo's own bag of screws
-   and a hot-glue gun are a safe baseline; everything else is a question.
+   printed. Never *design around* screws, nuts, inserts or tools that were not confirmed in hand: ask first. Asking is not
+   the same as withholding: recommending a tool or part is welcome (builders often want the advice and will buy it),
+   so name it, say why, and let the builder decide. The servo's own bag of screws and a hot-glue gun are a safe
+   baseline until they answer.
 2. **Every part has a place to sit.** Name the printed feature it registers against (section 5). "Glue it where it
    lands" is not a design.
 3. **What holds it, in each load direction**, and what lets it come out again (section 5). Anything that hides a

@@ -213,8 +213,19 @@ about the seam's axis: a 30 mm feature on an 85 mm sphere is 2.5 mm off a flat b
 overlap, since faces that merely touch do not union after a rotation. Checks: closed, nothing touches; the back half
 moved 1 mm off hits every bar and 0.2 mm hits none; the hook with its barb pressed in by the deflection sweeps in
 along the axis without touching the front, and the unpressed barb does hit; the hooks' feet and the bars' feet are
-at the bed plane, nothing past it; strain under 2.5 %. Print a coupon first: a short arc of each rim with one hook
-and one bar, pushed together by hand. What the research found for the alternatives, for the record: large printed
+at the bed plane, nothing past it; strain under 2.5 %. What the coupons taught (2026-10-28/29): the first coupon
+clicked and flopped open 2 mm, because the catch was modelled with 0.6 mm of axial clearance and the printed crest
+and bar edge both came out short; with 45° faces every bit of radial shortfall is axial play. A latch is a
+**preloaded** fit: model the catch face about 1.5 to 2 mm past where a clearance fit would put it, so the model
+interferes and the print absorbs it (the measured shortfall here was about 1.3 mm); the hook then sits slightly bent
+when closed and pulls the seam shut. Then **list the joint's degrees of freedom and what stops each.** The clearance,
+lock and entry checks all passed while nothing at all resisted a twist of the halves about the seam's axis, and on
+the coupon the barb slid clean off its bar: a snap on a round seam needs a rotational key (here, a block on the back
+half each side of every bar, a few tenths off its ends, with a check that a 1 mm twist hits and 0.2 mm does not).
+And a **coupon of a multi-site ring joint is the ring**, not one site: a one-site arc pivots about its one hook, so
+it cannot be judged, and its arcs flex apart to let the barb pass where the ring cannot (the stiffness rule in
+section 1). Two full hoops of the rims, every site, cable hole filled, cost about 35 g and an hour each and answer
+the question the halves would. What the research found for the alternatives, for the record: large printed
 threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and
 bayonets work (twist-lock containers; 3–4 lugs, 0.3–0.5 mm running gaps, a detent against back-off), but both turn
 one half relative to the other, which a seam-crossing cable or a feature straddling the seam rules out, and a smooth

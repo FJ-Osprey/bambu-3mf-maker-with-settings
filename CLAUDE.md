@@ -9,11 +9,19 @@
   Blender tooling. Most of that tooling is Roblox round-trip handling; only the headless approach carries over.
 - Playbook `bambu_3mf_workflow`: STL + settings markdown to a Bambu Studio `.3mf`.
 - Worked examples: `pirate-shedletsky/generate.py`, `phone-kickstand/generate.py`.
-- **`docs/DESIGN-FOR-PRINT.md`: the engineering rules.** Hole shrink and fit clearances, coupons, published PLA
-  numbers and what to design with, screws in PLA, micro-servo couplings and mounts, retention checks in the load
-  direction, adhesives. Read it before designing a part that has to fit or hold something, and **add what you learn
-  to it in the same session**: it is the one place design-for-print knowledge is collected (the playbooks above hold
-  tooling and workflow). Public repo: generic wording, no project paths or personal details.
+- **`docs/DESIGN-FOR-PRINT.md`: the engineering rules, entry point.** Section 0 (design for the builder), the
+  order for holding two parts together (print it in > snap > press fit > screw into a printed hole > glue as clamp >
+  drill as last resort), what is not yet measured on this printer, and an index of the topic files in
+  `docs/design-for-print/` (fits and holes, materials and orientation, screws and inserts, micro servo, snap fits and
+  retention, adhesives, design for assembly, this printer and its calibration coupons, tools). Read it before designing
+  a part that has to fit or hold something, and **add what you learn to the right topic file in the same session**: it
+  is the one place design-for-print knowledge is collected (the playbooks above hold tooling and workflow). Public
+  repo: generic wording, no project paths or personal details.
+- **`personas/fdm-design-for-print-engineer_persona.md`**: the reviewing lens (how a design-for-print engineer
+  questions a part, its standards of evidence, blind spots); research cache beside it. `/become-expert` framing for
+  this repo: `.claude/become-expert-local.md`.
+- **`calibration/`**: the calibration coupon set (`fit_coupons.py`, two 3MFs, labelled renders). The measuring sheet
+  and the results table are in `docs/design-for-print/8-printer-and-calibration.md`.
 
 ## Tools
 

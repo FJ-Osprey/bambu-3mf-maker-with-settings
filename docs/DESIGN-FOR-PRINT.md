@@ -1,12 +1,36 @@
-# Design for FDM printing: fits, PLA numbers, screws, servo couplings, retention
+# Design for FDM printing: the entry point
 
-What a part designer needs that the slicer docs don't say. Collected from builds on a Bambu A1 mini (0.4 mm nozzle,
-0.2 mm layers, PLA unless stated) and from published data sheets. **Add to this file in the same session you learn
-something**: a fit that worked or failed, a material number, a mechanism rule, a slicer behaviour. Keep entries
-generic (this repo is public): what was measured, on what printer and material, and what to do about it.
+What a part designer needs that the slicer docs don't say: how to hold parts together, fits and holes, materials and
+print orientation, screws and inserts, snaps and latches, glue, design for assembly, and what this printer (a Bambu A1
+mini, 0.4 mm nozzle, 0.2 mm layers, PLA unless stated) does to a part. Read this page top to bottom before designing
+anything that has to fit, hold or come apart; open the topic files below when a design needs their numbers.
 
-Tooling and workflow live elsewhere: `CLAUDE.md` in this repo (headless Blender, manifold3d CSG, 3MF packaging,
-`bambu_sweep.py`, `gcode_features.py`). This file is the engineering side.
+**Add to these files in the same session you learn something**: a fit that worked or failed, a material number, a
+mechanism rule, a slicer behaviour. Keep entries generic (this repo is public): what was measured, on what printer
+and material, and what to do about it. Tooling and workflow live in `CLAUDE.md` in this repo (headless Blender,
+manifold3d CSG, 3MF packaging, `bambu_sweep.py`, `gcode_features.py`). These files are the engineering side.
+
+**How sure each number is.** Every number carries one of three tags:
+- *settled*: several authoritative sources agree (manufacturer design guides, data sheets, tested lab data);
+- *disputed*: sources disagree, or it is common practice that the literature contests; the range is given;
+- *untested here*: one source only, or a published rule nobody has yet checked on this printer and filament.
+Almost every *fit* number is *untested here* until the calibration coupons in section 8 come back measured. A
+number from a guide written for another printer is a starting point for a coupon, never a final size.
+
+## Topic files
+
+| § | File | What is in it |
+|---|---|---|
+| 0 | this page | design for the builder (the checklist), how to hold two parts together, what is not yet measured |
+| 1 | [fits and holes](design-for-print/1-fits-and-holes.md) | hole shrink by orientation, teardrops, counterbores, slicer hole compensation, clearances, press fits, coupons, reaming |
+| 2 | [materials and orientation](design-for-print/2-materials-and-orientation.md) | PLA and PETG numbers, layer-line weakness, which way to lay a part, PLA vs PETG vs ASA/nylon, slicer settings for strength |
+| 3 | [screws, inserts, nuts](design-for-print/3-screws-inserts-nuts.md) | pilot holes for self-tapping screws, heat-set inserts, nut traps, creep and preload |
+| 4 | [micro servo](design-for-print/4-micro-servo.md) | coupling a printed part to an SG90/MG90S spline, mounting the case |
+| 5 | [location, retention, latches](design-for-print/5-location-retention-latches.md) | every part needs a place to sit; snap-fit formulas and limits; hinges, dovetails, bayonets, magnets; checks per load direction |
+| 6 | [adhesives](design-for-print/6-adhesives.md) | which glue for which plastic, joint shape, glue gap |
+| 7 | [assembly and prototyping](design-for-print/7-assembly-and-prototyping.md) | part count, self-locating parts, one-way fits, insertion paths, tolerance stacks, the print-fit-revise loop |
+| 8 | [this printer and the calibration coupons](design-for-print/8-printer-and-calibration.md) | elephant foot, compensation settings, supports and their scars, calibration, the coupon set to print and measure |
+| 9 | [tools worth owning](design-for-print/9-tools.md) | what each tool enables, rough cost, what to ask the builder |
 
 ## 0. Design for the builder: walk this list before publishing any part
 
@@ -15,7 +39,7 @@ has only what is on the bench. Every one of these was learned by getting it wron
 
 1. **Tools and hardware in hand only.** Ask what the builder has (drill? screws, which sizes? glue, which kinds?
    magnets? Velcro?) before designing anything that needs it. Never require drilling a printed part: holes are
-   printed. Never *design around* screws, nuts, inserts or tools that were not confirmed in hand: ask first. Asking is not
+   printed (the order below says when anything else is acceptable). Never *design around* screws, nuts, inserts or tools that were not confirmed in hand: ask first. Asking is not
    the same as withholding: recommending a tool or part is welcome (builders often want the advice and will buy it),
    so name it, say why, and let the builder decide. The servo's own bag of screws and a hot-glue gun are a safe
    baseline until they answer.
@@ -32,227 +56,65 @@ has only what is on the bench. Every one of these was learned by getting it wron
 7. **Instructions in plain words**, every term defined the first time (spline, horn, pocket, coupon, lip, pilot), a
    labelled picture per mechanism, and a one-line answer to "what do I print now".
 
-## 1. Fits and tolerances
+## How to hold two parts together, most preferred first
 
-- **Printed holes come out smaller than modelled.** Rules of thumb from several tolerance guides: 0.1-0.3 mm under
-  for a vertical-axis hole of 2-6 mm; horizontal-axis holes also sag at the top of the arc (the bridge), so they are
-  shorter top-to-bottom than side-to-side. The amount depends on printer, material and the slicer's
-  `xy_hole_compensation`, so for anything that has to fit, measure it or print a coupon.
-- **Clearances (diametral, i.e. total gap, not per side):** slip fit about 0.3-0.5 mm; snug 0.2; press fit 0.1-0.3 mm
-  of interference. Guides disagree on whether their numbers are per side or on the diameter: say which when writing
-  one down.
-- **Elastic range.** PLA yields at about 3 % strain and breaks at 7-12 % (section 2), so an interference that
-  stretches a bore by more than about 1 % of its diameter is into yield: it creeps or deforms rather than springing
-  back, and a thin hub can split. Teeth cutting grooves into a bore (a spline, a knurl) is fine; stretching a hub over
-  a round shaft by 0.3 mm is not. For a toothed shaft, size the bore between the root and the tip diameter so only
-  the teeth bite.
-- **Print a coupon in the same orientation as the feature,** with three sizes bracketing the guess, marked by notch
-  counts (text in CSG is a chore; one, two, three notches is not). It costs ten minutes and saves the hour-long part.
-  Worked examples: a three-width fit coupon (`phone-kickstand/generate.py`) and the three-pocket spline coupon
-  described below.
-- **A coupon has to be as stiff as the feature it stands for, or it proves nothing.** An 8 mm tall ring sliced off a
-  170 mm rim flexes in the hand, so pushing two such rings together tells you nothing about how the rigid halves
-  will fit; the person holding them sees them squash and rightly asks what the test is for (2026-10-28). For a big
-  joint, print the first half and trial-fit the other half's rim coupon on the real part, or accept that the halves
-  themselves are the test. Say in the instructions what a coupon is and what result counts as right; the person
-  printing it may never have heard the word.
-- **Data point (2026-10-27, A1 mini, yellow PLA, 0.2 mm layers):** a 4.5 mm modelled hole with a horizontal axis,
-  3 mm long, took a 21-tooth metal micro-servo spline (about 4.8 mm across the tips) with hand force and held with
-  no visible crack. The spline's root is near 4.4 mm, so this fit was stretching the hub as well as cutting grooves;
-  the follow-up design uses 4.6 mm so only the teeth bite.
-- **Support nubs eat clearances.** Where tree supports touched, 0.2-0.5 mm nubs and pits remain. Keep anything that
-  moves at least 1 mm from a supported surface, or write "scrape the wall flat, then dry-fit" into the assembly steps.
-- **First-layer squish closes small holes.** A 1.5 mm round hole on the first layer can close entirely under
-  elephant's foot; 2.0 mm holes stayed open. Slots survive better than round holes of the same width.
-  `elefant_foot_compensation` and `xy_hole_compensation` are the slicer levers.
+Plan A is to print the part the way it is needed: holes printed in, locating features printed in, the latch printed
+into the part. Work down this list and stop at the first rung that does the job; say in the design which rung was
+chosen and why the ones above it did not fit.
 
-## 2. PLA numbers (published) and what to design with
+1. **Don't have two parts.** Classic design for assembly (Boothroyd and Dewhurst) keeps a part separate only if it
+   must move relative to its neighbour, must be a different material, or must come apart for assembly or service; if
+   all three answers are no, merge them (*settled*: LibreTexts DFM course; Politecnico di Milano DfAM review, "part
+   consolidation"). Printing makes merging cheaper still: a hinge or a captive pin can be **printed in place**, already
+   assembled, with about 0.3 mm of gap between the moving surfaces (*disputed* 0.2-0.5 mm across guides, *untested
+   here*; section 5). The opposite move is also legitimate: split a part when one piece would need supports on a
+   mating face or a weak layer direction under load (Prusa KB, "splitting the model"), and then hold the pieces
+   together with a rung below.
+2. **A snap or latch printed into the parts**, or for a lid that opens often, **magnets in printed pockets**. No
+   tools, no hardware for a snap; reusable if its catch face is 45° rather than 90°. Size the arm with the strain
+   formula in section 5 and keep it within the material's limit. In PLA keep strain low (about 1-2 %), lay the arm
+   flat on the bed so it bends along its layers, and don't leave it bent in service: PLA creeps (*settled* direction,
+   numbers *disputed*). PETG takes about twice the strain. Magnets need buying (section 9).
+3. **A press or interference fit**, ideally with crush ribs (thin ribs inside the hole that squash) rather than a
+   plain round bore. It needs no hardware, but a printed press fit relaxes over weeks (PLA creeps), so it locates
+   well and retains poorly; give it a second retainer if the load is sustained (section 1).
+4. **A screw into a printed hole**: a self-tapping screw into a printed pilot, a nut in a printed trap, or a heat-set
+   threaded insert (a brass insert melted into a printed hole with a soldering iron). All three holes are printed.
+   Measured in PLA (CNC Kitchen): an M3 self-tapper pulls out at about 140 kg but strips at about 1 N·m and wears out
+   after a few reassemblies; an insert holds 150-200 kg and survives reassembly; a nut in a bottom trap held 166 kg
+   (*settled* as trends, one lab; section 3). Only design around screws, nuts or inserts the builder has confirmed.
+5. **Glue, as the clamp, never the locator.** A printed feature (socket, tongue and groove, pins, a step) puts the
+   parts in position; glue only stops them leaving. Then there is nothing to hold still while it cures. Best quick test
+   numbers on PLA: CA about 10 MPa, 5-minute epoxy about 6 MPa (Prusa, one sample each; section 6). Glue peels far
+   more easily than it pulls apart.
+6. **Drilling: last resort, and only for a hole that could not be printed.** No source found recommends drilling a
+   new hole in a print where printing it was possible; the guides print holes in and correct size with the slicer's
+   hole compensation or a coupon (sources in section 1). The exceptions the sources do accept, and which are not the
+   same thing as drilling a new hole: (a) **reaming** (opening a printed hole a few tenths with a reamer, or a drill bit
+   turned by hand) to final size for a bearing seat, a dowel or a precise pin, "only where absolutely required"
+   (Rahix; Syntax3D Lab; Hubs) (*mainstream*); (b) clearing a one-layer **sacrificial bridge** printed across a hole to
+   avoid supports (section 1); (c) a part that is already printed and cannot reasonably be reprinted. Each needs the
+   builder to have the tool, which section 0 says to ask about.
 
-| Source | Tensile | Modulus | Elongation | Flexural | Impact | Heat |
-|---|---|---|---|---|---|---|
-| Bambu PLA Basic, Bambu's TDS (X-Y / Z) | 35 ± 4 / 31 ± 3 MPa | (bending) 2750 ± 160 MPa | at break 12.2 ± 1.8 / 7.5 % | 76 ± 5 / 59 ± 6 MPa | Charpy unnotched 26.6 / 13.8 kJ/m², notched 7.9 | HDT 57 °C at 0.45 MPa |
-| Prusament PLA, Prusa's TDS (horizontal / vertical XZ specimens) | yield 51 ± 3 / 59 ± 2 MPa | 2.3 / 2.4 GPa | at yield 2.9 / 3.2 % | 83 / 99 MPa | Charpy 13 / 14 kJ/m² | — |
+**Choosing by what the joint must do.** Never comes apart: rungs 1, 3 or 5. Comes apart now and then for service: a
+45° snap, or a screw into a heat-set insert. Opens every day: magnets, a bayonet or a slide-on lid (section 5). Under
+sustained load or heat: form, not friction (a ledge, a screw head on a floor, a hook behind a bar), and PETG over
+PLA (section 2).
 
-Sources: Bambu PLA Basic technical data sheet (PDF linked from the store page; it gives X-Y and Z columns), Bambu
-filament guide PDF (HDT), prusament.com PLA TDS 2021-10. Prusament's "vertical XZ" is a specimen standing on its
-edge, not the across-layers case. Across layers on Bambu PLA Basic: tensile 89 % of X-Y, bending 78 %, elongation
-60 %, impact about half. The community's "50-80 %" is right for bending and pessimistic for tensile on this material.
-Put loads in-plane where you can; where one crosses layers, size for about 75 % and expect it to be more brittle.
+## Not yet measured on this printer
 
-For a back-of-envelope design check use: tensile 30 MPa, shear about 18 MPa (0.6 × tensile), bearing or compressive
-about 50 MPa, modulus 2.5 GPa, and keep **sustained** stress under about 5-10 MPa because PLA creeps (a clamped
-screw loses preload over days; a press fit relaxes). Form holds, friction doesn't: teeth, ledges, screw heads on
-floors. PLA softens from about 55-60 °C (a car in the sun, a hot enclosure, a lamp); PETG for those. At
-temperatures outdoors in autumn (0-10 °C) PLA is already glassy at room temperature, so expect slightly lower impact
-strength and no change in fit.
+These are the numbers the rest of the files lean on that have not been checked on this A1 mini with this filament.
+The calibration coupon set (section 8) measures the first five in one session with calipers; record the results here,
+dated, with the coupon file's name, and move each line out of this list as it is measured.
 
-## 3. Screws in PLA
-
-- **Self-tapping pilot hole: 80-85 % of the screw's thread diameter**, modelled; the printed hole shrinks a little
-  more, which is the right direction. For the 1.8-1.9 mm screws in a micro-servo bag, model 1.7 mm and say "drill to
-  1.8 if it won't start". Orient pilots vertical in the print where you can (roundest holes).
-- **Depth:** screw length minus everything it passes through, plus 1 mm. A screw that bottoms out before its head
-  clamps strips the PLA or snaps; the fix on the day is a washer under the head.
-- **Wall round a pilot:** 2 mm or more where possible. Next to a pocket that holds the screwed part it can be less
-  (a micro servo's tab holes are only about 2 mm from its case, so the bracket wall between pilot and pocket is about
-  0.9 mm by construction); the part in the pocket backs the wall.
-- **Snug, not cranked.** The clamp force creeps away anyway; the thread holds by form. Repeated in and out damages the
-  thread, so design for a few cycles or use heat-set inserts (not yet tried here).
-
-## 4. Micro servo (SG90 / MG90S class): coupling the output and mounting the case
-
-Vocabulary, for anyone new to servos: the **spline** is the toothed gear on the output shaft (metal on the MG90S,
-plastic on the SG90), 21 teeth, about 4.7-4.8 mm across the tips and about 4 mm tall by the usual figures (no
-manufacturer drawing dimensions it; measure yours), with a tapped hole down its centre for the **horn screw**. A **horn** is one of the plastic arms in the bag that press onto the spline. The bag
-holds one horn screw, two longer tab screws (about 1.9 mm thread) and a few horns.
-
-**Clone dimensions vary and the data sheets leave things out.** Measure before designing a mount: case length and
-width, base to tab underside, tab thickness, width and tip-to-tip span, tab hole spacing (27.0 mm on one 2026 clone;
-27.5 scaled from a drawing; no data sheet dimensions it), gear-housing top and spline top above the tabs, spline
-diameter and height, where the lead leaves the case, and the three screws' lengths.
-
-**Coupling a printed part to the spline, in order of preference:**
-
-1. **Stock horn captured in a pocket**, screwed to the printed part through its outer holes, plus the horn screw.
-   Strongest and the way commercial animatronics do it; needs the horn's dimensions, which vary by clone.
-2. **Printed hub with a blind round pocket pressed onto the spline, plus the horn screw through the pocket floor.**
-   The same joint as a stock horn, in PLA. Used on an animatronic jaw (2026-10-28, not yet printed and tested as
-   this is written): hub 16 mm across and 6 mm thick, pocket 4.6 mm modelled and 0.5 mm shallower than the spline
-   height as first modelled (so the floor seats on the spline top and the screw clamps it there; a deeper pocket would
-   leave the floor floating and the screw would bend it, and a pocket deeper than the real spline is the failure to
-   design out, so measure the spline height first: on the servo in hand it was 4.8 mm, not the 4 mm of the usual
-   figures, and the 3.5 mm pocket already printed was kept, leaving the hub face 1.3 mm off the housing), 2.2 mm
-   screw hole, 2.5 mm floor. A three-pocket coupon (4.5 / 4.6 / 4.7) in the
-   same print orientation picks the size, and the horn screw is tried through the coupon's floor before the part is
-   printed. The screw is the axial retention; the teeth take the torque.
-3. **Bare press fit with no screw.** Nothing stops it working off the shaft. Don't.
-
-A printed 21-tooth spline socket at 0.4 mm nozzle (0.7 mm tooth pitch) has not been tried here; the round pocket
-that the teeth broach is the version that works without luck.
-
-**Why option 2 should hold: an estimate, not a test result.** An MG90S stalls at 1.8-2.2 kg·cm, about 0.2 N·m,
-and a light jaw needs under 0.01 N·m to move, so the coupling only ever sees stall torque in a jam. If the teeth bite
-0.15 mm into the wall over 3.5 mm of engagement and all 21 shared the load, the bearing area would be about
-21 × 0.15 × 3.5 ≈ 11 mm²; 0.2 N·m at a 2.3 mm radius is about 90 N, so about 8 MPa. A hand-pressed printed bore
-won't share evenly, so take a factor of three for the few teeth that bite first: about 25 MPa against a 50 MPa
-allowable, still a margin. Hoop stress stays low only if the printed bore is no smaller than the spline's root
-(about 4.3-4.4 mm by the usual figures): the teeth cut, the hub isn't stretched. By the shrink rule in section 1 a
-4.6 mm pocket prints at 4.3-4.5, so this is not guaranteed on paper; it is what the coupon settles. The horn screw's
-clamp force at hand torque is not measured; a typical estimate for an M2 is 100-200 N, on a head about 3.5-4 mm
-across, so 10-20 MPa under the head, at or above the sustained-stress guide in section 2. That is why the screw is
-retention only, the torque goes through the teeth, and the instruction is "snug, not cranked". A plastic-gear servo
-strips in a stall; a metal-gear one survives and passes the stall torque into the printed coupling, so set the
-travel on the bench before fitting the mechanism.
-
-**Mounting the case:** a pocket the case drops into until its tabs rest on a ledge, with pilot holes under the tab
-holes for the servo's own tab screws. Pocket clearance 0.4 mm a side modelled. The pilot and the lead exit sit on the
-same centreline, so the pilots must stop at least 2 mm above the lead notch; with a case 17.5 mm below the tabs and
-7 mm pilots that leaves about 2 mm of solid, and a tab screw longer than about 9.5 mm then bottoms out (measure the
-screws; the bag's lengths vary by clone). **The lead exit must be open to the top of the pocket.** A notch at the
-floor alone cannot be used: the pocket is 0.4 mm bigger than the case, so the plug would have to be threaded out
-through the notch before the servo goes in, down the depth of the pocket, by feel; a builder stopped there (2026-10-28).
-Cut the end wall open from the ledge down to the notch on one side of the pilot (a 2.5 mm wall left round the pilot
-is enough), so the lead lays in from above as the servo is lowered. Do it at both ends when it is not known which
-end of the case the lead leaves. A pocket that merely wraps the case, with a zip-tie groove that never
-reaches the case, holds nothing (section 5). And the pocket block itself must sit on something that locates it: a
-foot on a curved shell does not (section 5).
-
-## 5. Location and retention: every part needs a place to sit, and a check per load direction
-
-**Location before retention.** Every internal part needs a printed feature it registers against: a hole, a slot, a
-rim, a step. A foot "shaped to the inner wall" of a sphere locates nothing, because a sphere has the same curvature
-everywhere, so "epoxy it where it lands" means holding the part by hand, in position, while the glue cures. That was
-rejected on a build as not assemblable (2026-10-28), after the shell was already printed. The fix that needed no
-reprint of the shell: hang the mount off a plug that fits a hole the shell already has. An elliptical plug in an
-elliptical hole at a 0.15 mm fit cannot rotate; a flange whose back is a sphere of the wall's radius seats on the
-wall round the hole and fixes the other three degrees of freedom; a strut from that flange carries the mount. Glue
-then does retention only (it stops the plug backing out; the hole gives no grip against that), with nothing to hold
-still while it cures, and hot glue is enough because the hole, not the glue, carries the position. Assert it in the
-generator: the plug fills its hole and a plug 0.1 mm fatter collides; the seat has a stated area on the wall; nothing
-else on the part touches the shell (a second contact point over-constrains against a shell that is not exactly the
-model). State the lever from the seat to the working point, because any seat error is multiplied by it, and tell
-the assembler to scrape support nubs off the wall under the seat.
-
-**A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
-the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. Nothing on the
-other half faces the direction it comes off in (every face in a lip joint faces the same way), so a positive lock
-needs either a hole through that half or a part that goes round the seam. With both halves already printed and no
-drill, one all-printed answer is a **pinned latch** with glued clips. It was rejected at the bench the same day it was
-designed ("you glue clips on and then lock them with a peg?"): if a part can be reprinted, the latch belongs in the
-part, and the builder would rather reprint 16 hours of halves than glue add-ons. The printed-in answer is the snap
-latch in the next paragraph; the pinned latch is kept here for the case where a reprint is truly impossible: at two places on the seam, a clip glued to each half carries a
-small block that reaches over the seam (0.3 mm above the other half); the two blocks sit side by side along the
-seam, each with a tunnel through it, and a printed pin slides along the seam through both. The pin ties the blocks
-together across the seam with 0.4 mm of play, so the halves cannot slide apart; push the pin out of one block and
-the shell opens. Put the pin's head uphill of the upper block and bigger than the tunnel, so gravity holds it
-closed, and make the pin longer than its opening travel plus the uphill tunnel, so it stays in that tunnel when open (a 30 mm pin, 15 mm of travel, a 12 mm tunnel). Gravity returns the pin on release, so one latch per seam is better than two where the lip joint already keeps the halves aligned: opening then takes one hand on the pin and one on the shell. Print a spare set; the clips are identical and go on either half. Assembly is
-self-aligning: glue one clip, hang the other on the pin, close the shell, glue the second clip. Checks that matter:
-each clip's contact is on its own half only; the pin sits in both tunnels and clears the shell; the far half moved
-±1 mm along its come-off direction collides with the pin (the lock), with a control where it does not; the pin
-pushed open clears the far block and is still inside the near tunnel; the pin pushed downhill hits the near block
-(the gravity stop). When a drill and screws are in hand, the simpler version is blocks (16 × 16 × 8, at least 2 mm
-beyond the pilot on every side) glued inside behind the lip and M3 screws through the overlap, drilled after gluing
-so the block's position never has to be exact. Either way, put the latches where nothing else sits on the shell: a
-cap or lid seat, a stand's rim, a cable hole. And plan the assembly order in the generator: a coupling that needs
-a few millimetres of travel to press together cannot be pressed inside the shell; sweep the whole assembled unit
-along its insertion path and assert it clears.
-
-**Snap latch printed into a two-half shell (2026-10-28).** The constraint first: both halves print rim-down (one on
-its lip, one on its rim), so no integral feature can cross the seam plane; anything past it is below the bed. What
-can be printed is a hook on the back half that reaches exactly to the seam plane, and a catch bar on the front half
-inside the lip's own extent (the lip already stands past the seam). Lay the hook's **arm along the seam**, not out
-from the wall: an arm that stands along Z bends across its layers and cracks (Formlabs' snap-fit guide and the
-Hackaday enclosure write-ups say so, and the published across-layer numbers in section 2 agree); an arm lying on the
-bed has its layers along its length and flexes in-plane, where PLA's elongation is 12 % rather than 7.5 %. Numbers
-that passed the generator's checks on a 170 mm sphere with a 3 mm wall, three sites: arm 1.8 mm thick (radial), 8 mm
-along the axis, 22 mm long with a 19 mm free length; barb 6 mm long at the free end, crest 0.3 mm under the lip, 45°
-entry ramp and 45° catch face; bar under the lip 10 mm long, 2.5 mm along the axis, reaching 2 mm in from the lip,
-45° catch face; deflection 2.0 mm, strain 1.5·t·δ/L² = 1.5 %, about 8.5 N per hook, so about 45 N to part or close
-three (pull-release; a 90° catch needs an outside release, and there is none at a covered seam). Revolve the profiles
-about the seam's axis: a 30 mm feature on an 85 mm sphere is 2.5 mm off a flat box, and fuse parts with a 0.5 mm
-overlap, since faces that merely touch do not union after a rotation. Checks: closed, nothing touches; the back half
-moved 1 mm off hits every bar and 0.2 mm hits none; the hook with its barb pressed in by the deflection sweeps in
-along the axis without touching the front, and the unpressed barb does hit; the hooks' feet and the bars' feet are
-at the bed plane, nothing past it; strain under 2.5 %. What the coupons taught (2026-10-28/29): the first coupon
-clicked and flopped open 2 mm, because the catch was modelled with 0.6 mm of axial clearance and the printed crest
-and bar edge both came out short; with 45° faces every bit of radial shortfall is axial play. A latch is a
-**preloaded** fit: model the catch face about 1.5 to 2 mm past where a clearance fit would put it, so the model
-interferes and the print absorbs it (the measured shortfall here was about 1.3 mm); the hook then sits slightly bent
-when closed and pulls the seam shut. Then **list the joint's degrees of freedom and what stops each.** The clearance,
-lock and entry checks all passed while nothing at all resisted a twist of the halves about the seam's axis, and on
-the coupon the barb slid clean off its bar: a snap on a round seam needs a rotational key (here, a block on the back
-half each side of every bar, a few tenths off its ends, with a check that a 1 mm twist hits and 0.2 mm does not).
-And a **coupon of a multi-site ring joint is the ring**, not one site: a one-site arc pivots about its one hook, so
-it cannot be judged, and its arcs flex apart to let the barb pass where the ring cannot (the stiffness rule in
-section 1). Two full hoops of the rims, every site, cable hole filled, cost about 35 g and an hour each and answer
-the question the halves would. What the research found for the alternatives, for the record: large printed
-threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and
-bayonets work (twist-lock containers; 3–4 lugs, 0.3–0.5 mm running gaps, a detent against back-off), but both turn
-one half relative to the other, which a seam-crossing cable or a feature straddling the seam rules out, and a smooth
-ball gives no grip for the twist.
-
-**Retention: check each load direction, not just clearance.** A set of clearance checks ("no overlap", "clear of
-the shell", "foot touches the wall") is invariant under "held by nothing": a bracket that let the servo lift
-straight out along its shaft passed every one. For every mounted or coupled part write down what resists each load
-direction (torque, pull along the shaft, lift, sideways) and assert it in the generator: tabs on a ledge, a screw
-head on a floor, teeth in a wall. Give every geometric check a positive control (a deliberate collision or a removed
-feature that must make it fail), or the check may be blind. Two blind spots found by mutation on 2026-10-28: a check
-that is symmetric under mirroring the part passes a mount built on the wrong side (only an unrelated "one solid
-piece" check caught it), and nothing in a set of fit checks sees an upside-down print orientation. Assert the side
-(which half-space the locating feature lies in) and the orientation (bed footprint area, the lowest face, which way
-a pocket opens) as their own checks. Two more from the same day's reviews: a check that reads the same with a
-mechanism open as closed (a pin that "opens" by zero millimetres still passed "open clears the lower block") cannot
-see a mechanism that never opens, so assert the state change itself (pin out of the lower tunnel, with a not-quite
-position as the control); and when identical printed copies of a chiral part are placed at several sites, the
-generator must not mirror the part at any site, because the printed copies cannot build the mirror. Model each
-site's arrangement with the one part as printed.
-
-## 6. Adhesives on PLA (looked up 2026-10-27)
-
-- Hot glue tacks and holds unloaded parts; it is not a structural joint and peels with a knife.
-- Epoxy bonds PLA well with both faces scuffed and clean, fills small gaps, and needs its full cure before load.
-- CA bonds close-fitting PLA but is brittle under ongoing stress and across gaps.
-- Acetal (POM) and nylon servo horns are low-surface-energy plastics: CA and epoxy don't grip them without a primer.
-  Screw, wire or zip-tie a horn; don't glue it.
-- Sources: sigmafilament.com (best glue for PLA/PETG), natecue.com gluing guide, silitech.ch on sticking POM,
-  learn.adafruit.com animatronics guide, loctiteproducts.com (how to glue PLA), Devcon 5-minute epoxy data sheet.
+- How much a printed hole shrinks, vertical axis, 2-6 mm (published 0.1-0.3 mm; one other printer measured 0.25).
+- How a horizontal-axis hole comes out (taller or shorter than wide), round vs teardrop.
+- Which clearance gives a slip, snug and press fit for a printed peg in a printed hole, and for a metal pin.
+- Which slot width takes a printed tab freely.
+- Which strain a flat-printed PLA snap arm survives repeatedly (published PLA "design strain" ranges from 1 % to 8 %).
+- The right pilot for a ~2 mm self-tapping screw and for M3 (published 75-90 % of thread diameter).
+- The heat-set insert hole on this printer (published: model 4.1-4.2 mm for an M3 insert; needs inserts in hand).
+- Bambu Studio's current A1 mini defaults for `elefant_foot_compensation`, `xy_hole_compensation`,
+  `xy_contour_compensation` (an old release note says elephant foot 0 for the A1 mini; read the values in the app).
+- From earlier builds, single data points only: the micro-servo spline pocket (section 4) and the printed snap
+  latch's preload (section 5).

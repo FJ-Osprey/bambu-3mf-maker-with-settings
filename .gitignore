@@ -8,3 +8,6 @@ phone-kickstand/*.stl
 handoffs/
 .memsearch/
 .DS_Store
+calibration/out/*.stl
+calibration/out/report.json
+calibration/renders/*_raw.png

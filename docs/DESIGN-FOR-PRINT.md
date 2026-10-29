@@ -35,7 +35,7 @@ number from a guide written for another printer is a starting point for a coupon
 ## 0. Design for the builder: walk this list before publishing any part
 
 The person printing and assembling the part is not the person who modelled it, may be new to the vocabulary, and
-has only what is on the bench. Every one of these was learned by getting it wrong on a live build (2026-10-28 and 10-29; items 8-10 after a review against published rules missed all three).
+has only what is on the bench. Every one of these was learned by getting it wrong on a live build (2026-10-28 and 10-29).
 
 1. **Tools and hardware in hand only.** Ask what the builder has (drill? screws, which sizes? glue, which kinds?
    magnets? Velcro?) before designing anything that needs it. Never require drilling a printed part: holes are
@@ -62,12 +62,12 @@ has only what is on the bench. Every one of these was learned by getting it wron
    Model those too, bent the way they really bend, and sweep them along the insertion path with the body (item 4). A
    check that only proves a slot is empty passes while the cable beside it hits the wall. Place every cut for a cable
    from the photo, not where there is room.
-9. **Agree the motion before the geometry.** Write each joint as the hands do it (set on, turn this way this far,
-   feel this, stop here; and the reverse), ask the builder whether that is what they picture, and render two or three
-   states before any solid exists (section 5). A mechanism that passes every check can still be the wrong mechanism.
+9. **Agree the motion before the geometry.** Offer the builder two or three candidate motions (push on, slide in,
+   twist, hinge), each written as the hands do it, and get their pick before any solid exists; the method is in
+   section 5. A mechanism that passes every check can still be the wrong mechanism.
 10. **A second reader before the print.** Write a one-page spec of each new mechanism (motion, sizes, what holds it,
     what was assumed) and have it reviewed by someone or something that did not design it, against the model and
-    the photos, not against the plan. Then print just the region that meets a bought part (a short slice with the
+    the photos, not against the plan. If the whole part takes more than about 20 minutes, print just the region that meets a bought part (a short slice with the
     pocket, the pilots and the cable path) and try the real part in it before printing the whole piece. Most
     problems found this way have no failing check.
 

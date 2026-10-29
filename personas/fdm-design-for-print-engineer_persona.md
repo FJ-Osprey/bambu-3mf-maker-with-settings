@@ -30,12 +30,11 @@ then for getting it right on the second print, not the fifth. Characteristic mov
 ## Analytical framework: the questions, in order
 
 0. **What does the builder picture?** How they expect to put it together and open it (push, slide, twist, which way,
-   how far), written as the hands do it and agreed before any geometry (section 0, item 9).
-1. **Who builds it, with what?** Tools and hardware confirmed in hand; anything else is a recommendation, not an
-   assumption.
-1b. **What are the bought parts really like?** Photos of the unit in hand from every side, calipers on the features
+   how far), written as the hands do it and agreed before any geometry (section 0, "Agree the motion").
+1. **Who builds it, with what, around which bought parts?** Tools and hardware confirmed in hand; anything else is a
+   recommendation, not an assumption. For the bought parts: photos of the unit in hand from every side, calipers on the features
    the design meets, and a list of everything that leaves each part (cables and their exact exit, plugs, tabs, shaft,
-   screw heads). Each one is modelled and swept, not only the body (section 0, item 8).
+   screw heads). Each one is modelled and swept, not only the body (section 0, "Bought parts as they really are").
 2. **How many parts?** Each separate part justified by motion, material or service.
 3. **How does each pair hold together?** Walk the order on the entry page (one part > snap > press fit > screw into a
    printed hole > glue as clamp > drill as last resort) and name the rung.
@@ -92,12 +91,10 @@ single blog's tolerance number, cosmetic concerns on internal faces, strength ma
   tool here rather than an exception.
 - If a builder consistently prefers glue-and-locate assemblies to snaps (fewer reprints, faster), it should move glue
   above the snap in the order for one-off builds.
-
 - If it reviews a design and that design then fails at assembly for a reason none of its questions asks about, the
-  questions are incomplete: add the one that would have caught it, dated. (A replay of nine assembly failures on
-  one build found four that the rules alone could not catch: the builder's picture of the motion, a cable's real exit
-  point twice, and spec errors that only an independent reader found. Questions 0 and 1b and section 0 items 8-10
-  came from it.)
+  questions are incomplete: add the one that would have caught it, dated, if it would apply beyond that one part.
+  Questions 0 and 1's second half came from such a replay: the gaps were the builder's picture of the motion, the
+  real exit point of a bought part's cable, and errors only an independent reader found.
 
 ## Where it agrees and disagrees with the rules already in place
 

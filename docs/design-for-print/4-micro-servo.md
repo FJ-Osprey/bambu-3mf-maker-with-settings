@@ -46,15 +46,22 @@ retention only, the torque goes through the teeth, and the instruction is "snug,
 strips in a stall; a metal-gear one survives and passes the stall torque into the printed coupling, so set the
 travel on the bench before fitting the mechanism.
 
-**Mounting the case:** a pocket the case drops into until its tabs rest on a ledge, with pilot holes under the tab
-holes for the servo's own tab screws. Pocket clearance 0.4 mm a side modelled. The pilot and the lead exit sit on the
-same centreline, so the pilots must stop at least 2 mm above the lead notch; with a case 17.5 mm below the tabs and
-7 mm pilots that leaves about 2 mm of solid, and a tab screw longer than about 9.5 mm then bottoms out (measure the
-screws; the bag's lengths vary by clone). **The lead exit must be open to the top of the pocket.** A notch at the
-floor alone cannot be used: the pocket is 0.4 mm bigger than the case, so the plug would have to be threaded out
-through the notch before the servo goes in, down the depth of the pocket, by feel; a builder stopped there (2026-10-28).
-Cut the end wall open from the ledge down to the notch on one side of the pilot (a 2.5 mm wall left round the pilot
-is enough), so the lead lays in from above as the servo is lowered. Do it at both ends when it is not known which
-end of the case the lead leaves. A pocket that merely wraps the case, with a zip-tie groove that never
+**Mounting the case:** a pocket the case sits in with its tabs resting on a ledge, with pilot holes under the tab
+holes for the servo's own tab screws. Pocket clearance 0.4 mm a side modelled. **The lead and the tab holes share the
+case's centreline** (on the MG90S clone in hand the flat lead leaves the middle of the end face, low down), so a case
+lowered in from the top can't get its lead past the end wall: a floor notch alone means threading the plug through
+it blind, and a slot cut from the ledge down either cuts through the pilot or sits beside the lead and misses it
+(both failed at the bench, 2026-10-28/29). What works: **side entry.** Leave one side wall off, so the case slides in
+sideways over the ledge until it stops on the other side wall; bend the lead down flat against the case end (a flat
+ribbon bends easily across its thickness, not edgewise) and give it a groove in the end wall's inner face, below
+the pilot, open to the entry side and out through the bottom of the block. About 3.5 mm deep and 7 mm wide across
+the case, with a 45° roof rising toward the pocket, it prints with no support and leaves the full wall round the
+pilot (about 2 mm of solid under the pilot's end; *untested here* until printed). The two tab screws then hold the servo against sliding
+back out the open side and carry its torque reaction, as tab screws alone do in model aircraft; the far side wall
+and the end walls locate it. A generator check should model the lead itself (a ribbon fixed to the case) and move
+it along the insertion path; a check that only probes the slot passes while the lead hits the wall. With a 17.5 mm
+case below the tabs and 7 mm pilots, a tab screw longer than about 9.5 mm bottoms out (measure the screws; the
+bag's lengths vary by clone), and measure where the lead leaves the case (one drawing says 4.7 mm above the base).
+A pocket that merely wraps the case, with a zip-tie groove that never
 reaches the case, holds nothing (section 5). And the pocket block itself must sit on something that locates it: a
 foot on a curved shell does not (section 5).

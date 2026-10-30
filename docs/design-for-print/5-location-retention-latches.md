@@ -84,8 +84,8 @@ joint: about 10 N and up to 30 N at the seat's edge on a 27 mm seat, against an 
 a person can touch, keep the plug as the locator and add a mechanical second mount: a thin ear on the part, screwed
 to a post on the shell's wall, with the screw axis along the insertion direction so a driver reaches from the open
 side, the post's face modelled to touch the ear exactly when the plug seats (a nominal gap there is closed by the screws
-tipping the part off the plug's seat: section 10), and a counterbore plus a deep pilot so the joint works for any
-screw length in the bag. See section 10.
+tipping the part off the plug's seat: section 10), and a deep pilot so the joint works for the bag's screw length
+(measure the screw's head before adding a counterbore: section 10). See section 10.
 
 **A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
 the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. Nothing on the

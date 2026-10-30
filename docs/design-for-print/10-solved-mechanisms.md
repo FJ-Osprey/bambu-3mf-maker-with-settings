@@ -115,8 +115,10 @@ would be peeled. Section 5 has the reasoning.
 **Motion**: the part goes in along its insertion axis, the plug seats, a thin ear lands beside a post grown from the wall,
 two screws go in along the same axis from the open side.
 
-Ear 3 mm thick, on a face that puts it on the bed so it needs no support; holes 2.6 mm for about 1.9 mm screws, with a
-5 mm counterbore 1.5 deep. Post a plain prism along the insertion axis, 14 × 16 mm, its face in the same plane as the ear's
+Ear 3 mm thick, on a face that puts it on the bed so it needs no support; holes 2.6 mm for about 1.9 mm screws, no
+counterbore (the first version had a 5 mm one, and the screw head turned out to be 5 mm: a head cannot sink into a bore its own
+size that prints a few tenths small, it wedges at the mouth; measure the head first, and give a counterbore at least 0.6 mm
+over it, or leave it out when the pilot is deep enough for the bag's screw). Post a plain prism along the insertion axis, 14 × 16 mm, its face in the same plane as the ear's
 (no gap: see below), pilots 1.7 mm and 9 mm deep. With a rim-down shell the post's face points at the bed and hangs on tree supports (a
 20-minute slicer penalty on a 9-hour half; confirm supports reach the whole face in the gcode). Scrape the face, clear
 the pilots with a screw. Check by intersecting the screws with the piloted part, not the solid post; a screw test on

@@ -168,6 +168,17 @@ the start. Lessons, in the order they would have saved the most time:
   from any side will be used wrong**: a closed box with one obvious open mouth reads correctly in the slicer and in
   the hand, an open channel whose slot is hidden under a flare does not. If a number the design depends on is
   "unverified", the coupon that measures it comes before the coupon that depends on it.
+- **And the closed box jammed too** (next print, same day), with the part barely in the mouth. Rule (1) above had been
+  read as "a few tenths": a 2.0 mm bar in a 2.3 mm slot only fits when the unmeasured seat lands in a 0.3 mm window,
+  the roof of a box is a drooping overhang, and a 0.3 mm "lead-in" at 90° is a wall. Three more rules: **give the
+  part a millimetre, not tenths**, when its position rides on a number nobody measured, and let one face (the floor
+  the pull lands on) do the holding while the other only closes the box; **a lead-in is a ramp**, not a step (a
+  staircase of 0.1 mm steps over 1.2 mm is fine in a revolved profile); and **run the fit check at both ends of the
+  unmeasured range and through the whole motion, with a control just past it that must collide**. A check that
+  places the part "centred in the slot" tests the one position where a tight slot cannot jam.
+- **A hole that two moving parts share goes in one of them.** A cable hole split across a seam that turns cannot line
+  up at insertion and needs a widening as long as the turn; a slot through one wall a few mm off the seam, hidden
+  where the assembly sits, needs nothing and leaves the seam a plain ring.
 
 What the research found for the alternatives, for the record: large printed
 threads work (screw-together spheres exist on Printables; 2–4 mm pitch, 0.25–0.45 mm flank offset, axis along Z) and

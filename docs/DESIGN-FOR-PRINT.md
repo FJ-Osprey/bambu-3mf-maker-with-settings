@@ -3,7 +3,9 @@
 What a part designer needs that the slicer docs don't say: how to hold parts together, fits and holes, materials and
 print orientation, screws and inserts, snaps and latches, glue, design for assembly, and what this printer (a Bambu A1
 mini, 0.4 mm nozzle, 0.2 mm layers, PLA unless stated) does to a part. Read this page top to bottom before designing
-anything that has to fit, hold or come apart; open the topic files below when a design needs their numbers.
+anything that has to fit, hold or come apart; open the topic files below when a design needs their numbers. **Before
+designing a latch, lid, seam, mount, coupling or hinge, check [section 10, solved
+mechanisms](design-for-print/10-solved-mechanisms.md)**: if one already fits, start from it.
 
 **Add to these files in the same session you learn something**: a fit that worked or failed, a material number, a
 mechanism rule, a slicer behaviour. Keep entries generic (this repo is public): what was measured, on what printer
@@ -31,6 +33,7 @@ number from a guide written for another printer is a starting point for a coupon
 | 7 | [assembly and prototyping](design-for-print/7-assembly-and-prototyping.md) | part count, self-locating parts, one-way fits, insertion paths, tolerance stacks, the print-fit-revise loop |
 | 8 | [this printer and the calibration coupons](design-for-print/8-printer-and-calibration.md) | elephant foot, compensation settings, supports and their scars, calibration, the coupon set to print and measure |
 | 9 | [tools worth owning](design-for-print/9-tools.md) | what each tool enables, rough cost, what to ask the builder |
+| 10 | [solved mechanisms](design-for-print/10-solved-mechanisms.md) | **check here before designing any joint**: twist-lock seam, servo spline hub, side-entry servo mount, crush-rib socket, friction-hinge plate, each with numbers, failed versions and status |
 
 ## 0. Design for the builder: walk this list before publishing any part
 

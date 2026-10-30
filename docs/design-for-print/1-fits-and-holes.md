@@ -80,8 +80,8 @@ let the coupon decide. Correction (2026-10-29, review): the hinge row was a per-
 - **Print a coupon in the same orientation as the feature,** with three or more sizes bracketing the guess, marked by
   notch counts (text in CSG is a chore; one, two, three notches is not). It costs ten minutes and saves the hour-long
   part. Several clearances on one coupon in 0.1 mm steps is the common practice (Syntax3D Lab; the3dai; Prusa KB on
-  iterating) (*settled*). Worked examples: a three-width fit coupon (`phone-kickstand/generate.py`), the spline coupon
-  in section 4, and the calibration set in section 8 (`calibration/fit_coupons.py`).
+  iterating) (*settled*). Worked examples: the spline coupon in section 4, the full-hoop twist-lock coupons in
+  section 10, and the calibration set in section 8 (`calibration/fit_coupons.py`).
 - **A coupon has to be as stiff as the feature it stands for, or it proves nothing.** An 8 mm tall ring sliced off a
   170 mm rim flexes in the hand, so pushing two such rings together tells you nothing about how the rigid halves
   will fit; the person holding them sees them squash and rightly asks what the test is for (2026-10-28). For a big

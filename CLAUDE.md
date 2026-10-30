@@ -1,6 +1,12 @@
-# bambu — 3D printing (Bambu A1 Mini)
+# bambu — 3D printing (Bambu A1 Mini) and the design-for-print knowledge base
 
 **This repo is public.** No personal or family details, photos, or names in anything committed.
+
+This repo is where everything learned about designing parts for FDM printing is collected, for every project: the
+rules, the measured numbers, and the **solved mechanisms** (`docs/design-for-print/10-solved-mechanisms.md`: joints,
+latches, mounts and couplings already built and tried, with their numbers and failed versions). Sessions in other
+repos are pointed here by a user-level rule and the `design-for-print` skill. Project files (part generators, 3MFs for
+a specific build) live in their own repos, not here.
 
 ## Read before designing or packaging a print
 
@@ -8,7 +14,6 @@
   modeling, mesh hygiene (MANIFOLD booleans), preview renders, and pointers to the games-repo
   Blender tooling. Most of that tooling is Roblox round-trip handling; only the headless approach carries over.
 - Playbook `bambu_3mf_workflow`: STL + settings markdown to a Bambu Studio `.3mf`.
-- Worked examples: `pirate-shedletsky/generate.py`, `phone-kickstand/generate.py`.
 - **`docs/DESIGN-FOR-PRINT.md`: the engineering rules, entry point.** Section 0 (design for the builder), the
   order for holding two parts together (print it in > snap > press fit > screw into a printed hole > glue as clamp >
   drill as last resort), what is not yet measured on this printer, and an index of the topic files in
@@ -31,10 +36,10 @@
   re-deriving them: rounded-edge slabs from 2D outlines, MANIFOLD booleans, one-solid engraving,
   pixel-art outlines with `unpinch()`, exact half-space cuts, STL export in mm, Workbench preview
   renders, `bbox_dims()`. Its docstring lists the traps each one avoids.
-- `phone-kickstand/generate.py` also has reusable logic for any **fold-out part on a friction
-  hinge**: knuckle clearance and a swing bevel for when the hinge axis sits below the part, preload
-  as a tilt about the axis, a portrait-stand solver, print-orientation export (top face down), and a
-  fit coupon for when there are no calipers.
+- Fold-out part on a friction hinge (knuckle clearance, swing bevel, preload tilt, print orientation): the rules are
+  in `docs/design-for-print/10-solved-mechanisms.md`. The old example generators (a fold-out phone stand, a blocky
+  figurine) were untracked on 2026-10-30 and stay in git history: `git log --oneline -- phone-kickstand`, then
+  `git show <that commit>~1:phone-kickstand/generate.py`.
 - **`bambu_sweep.py`**: measures how settings change a project's print time. It edits a 3MF's
   settings, slices it headlessly with the Bambu Studio CLI, and checks the gcode to confirm each
   override took. Use it before guessing which setting to change for speed. `--write` bakes

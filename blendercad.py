@@ -16,7 +16,7 @@ MANIFOLD solver. The traps these helpers exist to avoid are in the openclaw-memo
 - bisect_keep(): exact half-space cut (a rotated cutter box cut in the wrong place on 5.2).
 - A zero nonmanifold_count() does NOT prove a boolean worked; check bbox_dims() too.
 
-Worked example: phone-kickstand/generate.py.
+Worked example: a fold-out phone stand generator, in git history (see CLAUDE.md).
 """
 
 import math

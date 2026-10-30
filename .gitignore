@@ -4,7 +4,8 @@ __pycache__/
 *.pyc
 prompts/
 needoh-2
-phone-kickstand/*.stl
+phone-kickstand/
+pirate-shedletsky/
 handoffs/
 .memsearch/
 .DS_Store

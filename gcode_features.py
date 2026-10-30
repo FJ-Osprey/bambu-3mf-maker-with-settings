@@ -8,7 +8,7 @@ and angle around the part. Use it to find out what a stray support cluster is ho
 
 Reads the gcode bambu_sweep.py leaves in its --workdir (<workdir>/<variant>/plate_1.gcode).
 
-Why it exists (2026-10-26, Verity head): a rim-down hemisphere showed supports outside its rim. The guess was the
+Why it exists (2026-10-26, a hollow ball printed as two halves): a rim-down hemisphere showed supports outside its rim. The guess was the
 rim joint's 1.5 mm step; a 45-degree chamfer changed nothing. Bucketing the support points by angle showed they
 were all in one 15-degree sector: the cable hole's arch. Angle + height tells you what is being propped; a count
 alone doesn't.

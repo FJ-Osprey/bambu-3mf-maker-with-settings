@@ -116,11 +116,21 @@ would be peeled. Section 5 has the reasoning.
 two screws go in along the same axis from the open side.
 
 Ear 3 mm thick, on a face that puts it on the bed so it needs no support; holes 2.6 mm for about 1.9 mm screws, with a
-5 mm counterbore 1.5 deep. Post a plain prism along the insertion axis, 14 × 16 mm, stopping 0.3 mm short of the ear,
-pilots 1.7 mm and 9 mm deep. With a rim-down shell the post's face points at the bed and hangs on tree supports (a
+5 mm counterbore 1.5 deep. Post a plain prism along the insertion axis, 14 × 16 mm, its face in the same plane as the ear's
+(no gap: see below), pilots 1.7 mm and 9 mm deep. With a rim-down shell the post's face points at the bed and hangs on tree supports (a
 20-minute slicer penalty on a 9-hour half; confirm supports reach the whole face in the gcode). Scrape the face, clear
 the pilots with a screw. Check by intersecting the screws with the piloted part, not the solid post; a screw test on
-the solid post passes with the pilots missing. **Not yet printed.**
+the solid post passes with the pilots missing.
+
+**No nominal gap between ear and post.** The first version left 0.3 mm "so the post can't unseat the plug", to be closed
+by the screws. A 3 mm ear a few millimetres from its root is about 2500 N/mm, so screws never bend it: they turn the whole
+part about the top edge of its other seat. Probing the solids with that pivot (the seat's top, not the plug's centre)
+gave 1.7 degrees for 0.3 mm, the seat's far edge lifting 0.7 mm off the wall and the driven part sitting 2 mm deeper.
+Nothing collided, but the seat the design relies on was no longer touching. Two seats on one part that both fix the
+same freedom must be modelled to land together; the one that prints long (a face on supports) is scraped to fit, and a
+slit left after scraping is filled, never pulled shut. General rule: a clearance that screws are expected to close must
+be closed by something compliant, or it moves the part off its other datum. A headless slice of the final file showed
+support interface up to one layer under the face and the face's first layer printed as a bridge. **Not yet printed.**
 
 ## Fold-out plate on a friction hinge
 

@@ -83,7 +83,8 @@ at 8 Hz) but a hobby servo drives at full torque whenever its target jumps, and 
 joint: about 10 N and up to 30 N at the seat's edge on a 27 mm seat, against an estimated 5-20 N of hot-glue peel. For anything a servo drives or
 a person can touch, keep the plug as the locator and add a mechanical second mount: a thin ear on the part, screwed
 to a post on the shell's wall, with the screw axis along the insertion direction so a driver reaches from the open
-side, a small nominal gap so the post can't unseat the plug, and a counterbore plus a deep pilot so the joint works for any
+side, the post's face modelled to touch the ear exactly when the plug seats (a nominal gap there is closed by the screws
+tipping the part off the plug's seat: section 10), and a counterbore plus a deep pilot so the joint works for any
 screw length in the bag. See section 10.
 
 **A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on

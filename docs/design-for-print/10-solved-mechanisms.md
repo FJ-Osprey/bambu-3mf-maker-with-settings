@@ -20,6 +20,7 @@ The long-form reasoning and the sources are in the section each entry links to.
 | [Printed hub on a micro-servo spline](#printed-hub-on-a-micro-servo-spline) | driving a printed arm, jaw or paddle from an SG90/MG90S | printed, not yet proven |
 | [Side-entry micro-servo mount](#side-entry-micro-servo-mount) | holding a micro servo in a printed block when its lead leaves the end face | designed and checked |
 | [Crush-rib socket](#crush-rib-socket) | pressing a printed part into a printed bore that has to stay put without glue | designed and checked |
+| [Ear-and-post second mount inside a shell](#ear-and-post-second-mount-inside-a-shell) | anchoring a part already located by a hole, with no fastener showing outside | designed and checked |
 | [Fold-out plate on a friction hinge](#fold-out-plate-on-a-friction-hinge) | a printed plate fixed to an existing hinge leaf (a stand, a flap) | designed and checked |
 
 ## Twist-lock seam for a two-half shell
@@ -105,6 +106,21 @@ on the lip's outer face (1.6 mm wide at the base, 0.6 at the tip) reaching 0.05 
 stopping short of the bore's first-layer flare, with a 0.8 mm chamfer on the lip's top as a lead-in. The ribs squash,
 the wall doesn't; too tight, shave the ribs with a knife. Guides suggest ribs about 0.2 mm proud; this used 0.05
 because printed holes already come out small (section 1). Report the fit (won't go / push / slides) when printed.
+
+## Ear-and-post second mount inside a shell
+
+**Use it when** a part inside a shell is located by a plug in a hole, nothing may show on the outside, and glue alone
+would be peeled. Section 5 has the reasoning.
+
+**Motion**: the part goes in along its insertion axis, the plug seats, a thin ear lands beside a post grown from the wall,
+two screws go in along the same axis from the open side.
+
+Ear 3 mm thick, on a face that puts it on the bed so it needs no support; holes 2.6 mm for about 1.9 mm screws, with a
+5 mm counterbore 1.5 deep. Post a plain prism along the insertion axis, 14 × 16 mm, stopping 0.3 mm short of the ear,
+pilots 1.7 mm and 9 mm deep. With a rim-down shell the post's face points at the bed and hangs on tree supports (a
+20-minute slicer penalty on a 9-hour half; confirm supports reach the whole face in the gcode). Scrape the face, clear
+the pilots with a screw. Check by intersecting the screws with the piloted part, not the solid post; a screw test on
+the solid post passes with the pilots missing. **Not yet printed.**
 
 ## Fold-out plate on a friction hinge
 

@@ -77,6 +77,15 @@ else on the part touches the shell (a second contact point over-constrains again
 model). State the lever from the seat to the working point, because any seat error is multiplied by it, and tell
 the assembler to scrape support nubs off the wall under the seat.
 
+Correction (2026-10-30, same build, design stage): that plug's hot glue was the only thing resisting pull-out, and it
+was loaded in peel. A servo's torque stays small in normal motion (paddle of 11 g, about 2×10⁻⁵ kg·m², under 20 mN·m
+at 8 Hz) but a hobby servo drives at full torque whenever its target jumps, and a push on the driven part pulls directly on the
+joint: about 10 N and up to 30 N at the seat's edge on a 27 mm seat, against an estimated 5-20 N of hot-glue peel. For anything a servo drives or
+a person can touch, keep the plug as the locator and add a mechanical second mount: a thin ear on the part, screwed
+to a post on the shell's wall, with the screw axis along the insertion direction so a driver reaches from the open
+side, a small nominal gap so the post can't unseat the plug, and a counterbore plus a deep pilot so the joint works for any
+screw length in the bag. See section 10.
+
 **A two-part shell needs a repeatable fastener, not tape.** A slip-fit rim joint (a lip on one half, a recess on
 the other) holds nothing, and tape or glue dabs are not serviceable when the mechanism is inside. Nothing on the
 other half faces the direction it comes off in (every face in a lip joint faces the same way), so a positive lock

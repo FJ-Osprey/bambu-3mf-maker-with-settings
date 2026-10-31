@@ -15,8 +15,7 @@ us by opening an issue.
 Print **T2 and T3** (T2 has the cable notch, so it proves the seam still holds with it) and try the twist-lock (step 6) before spending 16 hours on the halves. Hold the back hoop still, set the front
 hoop on it with the ticks 18 mm apart, and turn. Right: a soft bump, then a hard stop, with fingertip force.
 
-Cleanup: snap the tree supports out of the dome, then scrape the inner wall flat around the mouth and around the eye the bracket
-uses. Support marks there tilt everything. Trim the brim's ridge from the lip. On the notched front, take the thin support out of the
+Cleanup: snap the tree supports out of the dome, then scrape the inner wall flat around the mouth and around both eyes. Support marks there tilt everything. Trim the brim's ridge from the lip. On the notched front, take the thin support out of the
 notch with pliers and a knife.
 
 ## 1. Mouth unit, on the bench
@@ -34,7 +33,12 @@ notch with pliers and a knife.
 
 ## 2. Mouth unit into the head
 
-The eye on the left as you face the head is on the bracket. Push the plain plug into the other eye.
+The eye on the left as you face the head is on the bracket. The other eye is one plug from part 05. The three plugs differ only in
+their ribs, the thin strips along the pin that squash as it goes in, and the notches on each rim say how tight it is: 1 is loosest, 3 is
+tightest. Start with 3, which was the best of the three on an A1 mini in PLA. With the back half off, press it in from the inside with your thumb
+until its rim sits on the wall. Right: the face is flush with the sphere and the plug stays put when you shake the head, with no glue. If 3 will
+not go in, try 2, then 1, or shave its ribs with a knife.
+
 
 1. Cut the support off the yellow post inside the face, scrape its face smooth, and run a screw into each of its two pilots once.
 2. Bring the unit in through the open back, pin first, into the eye hole. The eye's face must sit flush with the outside of the sphere.

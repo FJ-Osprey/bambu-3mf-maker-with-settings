@@ -55,7 +55,8 @@ has only what is on the bench. Every one of these was learned by getting it wron
 5. **Already-printed parts are fixed.** When a shell is printed, locate and fasten new parts on features it already
    has (a hole, a rim, a lip, an existing cut-out); don't plan a reprint of a long part as the fix.
 6. **Test pieces prove something,** are as stiff as what they stand for, and the instructions say what "right" looks
-   like (section 1).
+   like (section 1). When a set holds sizes that look alike, mark each in the geometry with one, two, three notches,
+   rising with tightness, so the builder can tell them apart and report the result as a count.
 7. **Instructions in plain words**, every term defined the first time (spline, horn, pocket, coupon, lip, pilot), a
    labelled picture per mechanism, and a one-line answer to "what do I print now".
 8. **Bought parts as they really are.** For every bought part the design touches (servo, motor, board, switch,

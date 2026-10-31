@@ -28,7 +28,7 @@ The parts are attached to each release of this repo as a zip, as `.3mf` (ready t
 | 02 | Back half | yellow | 0.20 | tree, plate only | 7 h 32 m | 166 g |
 | 03 | Mouth paddle | yellow | 0.20 | tree, plate only | 0 h 55 m | 12 g |
 | 04 | Servo bracket, with one eye on it | black | 0.20 | tree, plate only | 0 h 57 m | 13 g |
-| 05 | Eye plugs (you need one; the other is a spare) | black | 0.16 | no | 0 h 18 m | 3 g |
+| 05 | Eye plugs, three tightnesses (you need one) | black | 0.12 | no | 0 h 29 m | 4 g |
 | 06 | Pedestal | black | 0.20 | no | 3 h 34 m | 89 g |
 | 07 | Riser | black | 0.20 | no | 2 h 57 m | 98 g |
 | T1 | Test: gear fit, three pocket sizes | yellow | 0.20 | no | 0 h 19 m | 3 g |
@@ -59,7 +59,7 @@ with the layer and support settings above. Each half stands on a thin ring, and 
 | 3.5 mm audio extension cable, female-to-female adapter, ground loop isolator | Computer to speaker. The isolator stops the hum you can get with the speaker charging from the same hub |
 | Black tape, hobby knife, small screwdriver | For the smile line, support cleanup and the screws |
 
-Nothing here needs drilling or gluing, apart from an optional dab of hot glue behind the plain eye.
+Nothing here needs drilling, and the eye plug needs no glue.
 
 ## How it connects
 

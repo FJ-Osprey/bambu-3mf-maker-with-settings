@@ -82,6 +82,12 @@ let the coupon decide. Correction (2026-10-29, review): the hinge row was a per-
   part. Several clearances on one coupon in 0.1 mm steps is the common practice (Syntax3D Lab; the3dai; Prusa KB on
   iterating) (*settled*). Worked examples: the spline coupon in section 4, the full-hoop twist-lock coupons in
   section 10, and the calibration set in section 8 (`calibration/fit_coupons.py`).
+- **Mark every member of a fit set in the geometry, by notch count, whenever the sizes can't be told apart by eye.**
+  Parts that differ by 0.1 mm look identical once they are off the plate, and the mark has to outlast the plate layout,
+  which the slicer may rearrange. Cut one, two, three notches through a rim or flange, on a face that is hidden after
+  assembly, and let the count rise with tightness so the number also reads as the order: start at the top, step down.
+  Worked in the hand on a set of three press-in plugs (2026-10-31): the builder reported the result as a notch count,
+  which is all the designer needs to fix the size, and called the notches out as a good idea.
 - **A coupon has to be as stiff as the feature it stands for, or it proves nothing.** An 8 mm tall ring sliced off a
   170 mm rim flexes in the hand, so pushing two such rings together tells you nothing about how the rigid halves
   will fit; the person holding them sees them squash and rightly asks what the test is for (2026-10-28). For a big
@@ -97,6 +103,10 @@ let the coupon decide. Correction (2026-10-29, review): the hinge row was a per-
   took a 21-tooth metal micro-servo spline (about 4.8 mm across the tips) with hand force and held with no visible
   crack. The spline's root is near 4.4 mm, so this fit was stretching the hub as well as cutting grooves; the
   follow-up design uses 4.6 mm so only the teeth bite.
+- **(2026-10-31, A1 mini, black PLA plug at 0.12 mm layers, into a yellow PLA shell at 0.16 mm layers):** eight crush ribs
+  on a press-in plug, in a 10.6 × 21 mm oval hole through a shell wall, printed at gaps of +0.15, +0.05 and -0.05 mm from
+  the modelled hole. The -0.05 plug (ribs 0.05 mm proud of the hole) fit best. It was the tightest of the three, so the
+  range did not bracket the fit from above: on the next set, centre on -0.05 and step tighter.
 
 ## Sources
 

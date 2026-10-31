@@ -105,8 +105,9 @@ let the coupon decide. Correction (2026-10-29, review): the hinge row was a per-
   follow-up design uses 4.6 mm so only the teeth bite.
 - **(2026-10-31, A1 mini, black PLA plug at 0.12 mm layers, into a yellow PLA shell at 0.16 mm layers):** eight crush ribs
   on a press-in plug, in a 10.6 × 21 mm oval hole through a shell wall, printed at gaps of +0.15, +0.05 and -0.05 mm from
-  the modelled hole. The -0.05 plug (ribs 0.05 mm proud of the hole) fit best. It was the tightest of the three, so the
-  range did not bracket the fit from above: on the next set, centre on -0.05 and step tighter.
+  the modelled hole. The -0.05 plug (ribs 0.05 mm proud of the hole) fit best, but "fits best" was not "holds": a thumb bump
+  pushed it out and it had to be glued. It was the tightest of the three, so the range did not bracket the fit from above.
+  A next set at -0.15, -0.25 and -0.35 is modelled, not printed. Test a press fit by bumping it, not only by whether it seats.
 
 ## Sources
 

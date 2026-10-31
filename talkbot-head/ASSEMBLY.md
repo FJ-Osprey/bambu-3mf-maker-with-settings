@@ -12,10 +12,10 @@ Print **T1** and try the servo's gear in each of its three pockets (the notches 
 will not twist on the gear. The paddle uses 4.6. If a different pocket wins on your printer, the paddle will be loose or tight: tell
 us by opening an issue.
 
-Print **T2 and T3** (T2 has the cable notch, so it proves the seam still holds with it) and try the twist-lock (step 6) before spending 16 hours on the halves. Hold the back hoop still, set the front
+Print **T2 and T3** (T3 has the cable notch, so it proves the seam still holds with it) and try the twist-lock (step 6) before spending 16 hours on the halves. Hold the back hoop still, set the front
 hoop on it with the ticks 18 mm apart, and turn. Right: a soft bump, then a hard stop, with fingertip force.
 
-Cleanup: snap the tree supports out of the dome, then scrape the inner wall flat around the mouth and around both eyes. Support marks there tilt everything. Trim the brim's ridge from the lip. On the notched front, take the thin support out of the
+Cleanup: snap the tree supports out of the dome, then scrape the inner wall flat around the mouth and around both eyes. Support marks there tilt everything. Trim the brim's ridge from the lip. On the notched back, take the thin support out of the
 notch with pliers and a knife.
 
 ## 1. Mouth unit, on the bench
@@ -36,9 +36,8 @@ notch with pliers and a knife.
 The eye on the left as you face the head is on the bracket. The other eye is one plug from part 05. The three plugs differ only in
 their ribs, the thin strips along the pin that squash as it goes in, and the notches on each rim say how tight it is: 1 is loosest, 3 is
 tightest. Start with 3, which was the best of the three on an A1 mini in PLA. With the back half off, press it in from the inside with your thumb
-until its rim sits on the wall. Right: the face is flush with the sphere and the plug stays put when you shake the head, with no glue. If 3 will
-not go in, try 2, then 1, or shave its ribs with a knife.
-
+until its rim sits on the wall. Right: the face is flush with the sphere. If 3 will not go in, try 2, then 1, or shave its ribs with a knife.
+Then put a dab of hot glue over the rim, inside. On the test build the ribs alone were not enough: a thumb bump pushed the plug out.
 
 1. Cut the support off the yellow post inside the face, scrape its face smooth, and run a screw into each of its two pilots once.
 2. Bring the unit in through the open back, pin first, into the eye hole. The eye's face must sit flush with the outside of the sphere.
@@ -54,10 +53,13 @@ not go in, try 2, then 1, or shave its ribs with a knife.
 
 The head holds only the servo. Its lead, with the jumper wires, goes down to the Pico in the base.
 
-- **Lay-in front (01):** lay the lead in the notch at the bottom of the head. Other cables go beside it. Press everything fully in,
-  away from the rim, before the back goes on, or the back's rim will catch it on the turn. It takes a flat cord 7.5 x 3.5, a USB
-  cable 4.7 round and the servo ribbon side by side.
-- **Closed-slot front (01b):** thread the servo lead through the oval before the head goes on the stand.
+The exit is in the back half, an inch behind the seam, so it stays out of sight when the head tilts up to look at people.
+
+- **Lay-in back (02):** do this at step 6, as the back goes on. Bring the back half up so the lead slides into the notch from the rim, with
+  any other cables beside it. Press everything well in, away from the rim, so the front's lip can pass. The notch is wide enough for a flat
+  cord 7.5 x 3.5, a USB cable 4.7 round and the servo ribbon side by side, but thick cables have not been tried here: see Base. To open the head, the back half lifts away from the cables.
+- **Closed-slot back (02b):** thread the servo lead through the oval from the inside before the back goes on. The back half then stays on the
+  lead. To take it right off, undo the jumper joint and pull the plug back through.
 
 Tape each jumper joint and leave slack, or the plugs pull apart when the head is lifted.
 
@@ -66,8 +68,8 @@ Tape each jumper joint and leave slack, or the plugs pull apart when the head is
 ![The back arch](images/back_arch.png)
 
 1. Tape the webcam to the riser's floor, facing the front, tilted up. Tilted fully up it comes within 2 mm of the head, so route
-   cables round its sides, not over the top. **Before printing the notched front, test this:** with the real camera at your tilt and
-   the head on the stand, can your cables get from the bottom of the head to the back? The servo ribbon always can; thick cables may not, and
+   cables round its sides, not over the top. **Before printing the notched back, test this:** with the real camera at your tilt and
+   the head on the stand, can your cables get from the bottom of the head to the back? Tilting the head rolls the exit forward over the camera. The servo ribbon always can; thick cables may not, and
    then the camera has to tilt less.
 2. Put the hub, Pico and speaker behind it. Connect the Pico, the camera and the speaker's charge lead to the hub.
    Plug the speaker's 3.5 mm lead into the female-to-female adapter, the adapter into the ground loop isolator, and the extension from the
@@ -84,7 +86,8 @@ Run the camera and speaker from your software, and send the jaw angles between 2
 
 ## 6. Close the head (twist-lock)
 
-The head sits on the pedestal's ring. Hold on to the front half.
+Do this with the head lifted at least 5 mm off the pedestal's ring: the back half cannot go on while the front sits down on the ring, because the
+back's lower edge hits it. Leave that much slack in the cables, and glue or stick nothing to the ring until the head is closed. Hold on to the front half.
 
 1. Find the small ticks at the top of the seam: one on the back, two on the front.
 2. Put the back's tick against the front's far tick and set the back on. It drops about 5 mm with no force.

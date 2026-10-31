@@ -11,9 +11,8 @@ serial (see `firmware/code.py`), so anything that can open a serial port can dri
 
 | Part | State |
 |---|---|
-| Back half, paddle, bracket, eye plug, pedestal, riser | Printed and assembled on one A1 mini build |
-| Front half with the closed slot (`01b`) | Printed and assembled on the same build |
-| Front half with the lay-in notch (`01`) | **Modelled, sliced and reviewed. Not printed yet.** Thick cables also need a bench test: see Assembly, Base |
+| Paddle, bracket, eye plug, pedestal, riser | Printed and assembled on one A1 mini build |
+| Front half (`01`), back half with the lay-in notch (`02`), back half with the closed slot (`02b`) | **Modelled, sliced and reviewed. Not printed yet.** The same halves were printed and used with the cable exit in the front; it showed when the head tilted up, so it moved to the back. Thick cables also need a bench test: see Assembly, Base |
 
 Every part was printed once, on one printer. Fits are measured on that printer only. Test pieces are included for that reason.
 
@@ -23,25 +22,25 @@ The parts are attached to each release of this repo as a zip, as `.3mf` (ready t
 
 | # | Part | Colour | Layer | Supports | Time | Filament |
 |---|---|---|---|---|---|---|
-| 01 | Front half, lay-in cable notch | yellow | 0.16 | tree, plate only | 8 h 56 m | 170 g |
-| 01b | Front half, closed slot (print this **or** 01) | yellow | 0.16 | tree, plate only | 8 h 57 m | 171 g |
-| 02 | Back half | yellow | 0.20 | tree, plate only | 7 h 32 m | 166 g |
+| 01 | Front half | yellow | 0.16 | tree, plate only | 8 h 57 m | 171 g |
+| 02 | Back half, lay-in cable notch | yellow | 0.20 | tree, plate only | 7 h 46 m | 168 g |
+| 02b | Back half, closed slot (print this **or** 02) | yellow | 0.20 | tree, plate only | 7 h 49 m | 170 g |
 | 03 | Mouth paddle | yellow | 0.20 | tree, plate only | 0 h 55 m | 12 g |
 | 04 | Servo bracket, with one eye on it | black | 0.20 | tree, plate only | 0 h 57 m | 13 g |
 | 05 | Eye plugs, three tightnesses (you need one) | black | 0.12 | no | 0 h 29 m | 4 g |
 | 06 | Pedestal | black | 0.20 | no | 3 h 34 m | 89 g |
 | 07 | Riser | black | 0.20 | no | 2 h 57 m | 98 g |
 | T1 | Test: gear fit, three pocket sizes | yellow | 0.20 | no | 0 h 19 m | 3 g |
-| T2 | Test: twist-lock, front hoop with the notch | yellow | 0.20 | no | 0 h 41 m | 15 g |
-| T3 | Test: twist-lock, back hoop | yellow | 0.20 | no | about 1 h | 22 g |
+| T2 | Test: twist-lock, front hoop | yellow | 0.20 | no | 0 h 41 m | 15 g |
+| T3 | Test: twist-lock, back hoop with the notch | yellow | 0.20 | no | 1 h 4 m | 21 g |
 
-About 25 h in all: 350 g yellow, 200 g black, PLA. Times are slicer estimates. **Which front:** print 01 unless you are sure only
-the servo lead will ever go through the head. Lay-in means no plug ever has to pass through, so a fat one is no problem.
+About 25 h in all: 350 g yellow, 200 g black, PLA. Times are slicer estimates. **Which back:** print 02 unless you are sure only
+the servo lead will ever go through the head. Lay-in means no plug ever has to pass through, so a fat one is no problem, and the back half lifts away from the cables. With the closed slot the lead stays threaded through the back half.
 
 **Printers.** Set up and printed on a Bambu Lab A1 mini (180 x 180 x 180 mm bed). The halves are 170 mm across and take a 3 mm
 brim, so they need a bed of at least 180 x 180 mm. Each `.3mf` holds A1 mini, 0.4 mm nozzle, PLA settings. A larger printer will
 fit every part, but those settings were made for the A1 mini, so re-slice for your machine. Other brands can use the `.stl` files
-with the layer and support settings above. Each half stands on a thin ring, and the notched front's ring is open at the notch: watch its first layers.
+with the layer and support settings above. Each half stands on a thin ring, and the notched back's ring is open at the notch: watch its first layers.
 
 ## Parts to buy
 
@@ -59,7 +58,7 @@ with the layer and support settings above. Each half stands on a thin ring, and 
 | 3.5 mm audio extension cable, female-to-female adapter, ground loop isolator | Computer to speaker. The isolator stops the hum you can get with the speaker charging from the same hub |
 | Black tape, hobby knife, small screwdriver | For the smile line, support cleanup and the screws |
 
-Nothing here needs drilling, and the eye plug needs no glue.
+Nothing here needs drilling. The eye plug needs a dab of hot glue on its back: ribs alone did not hold it.
 
 ## How it connects
 

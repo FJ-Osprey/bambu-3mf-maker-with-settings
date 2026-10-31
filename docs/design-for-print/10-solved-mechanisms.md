@@ -19,7 +19,7 @@ The long-form reasoning and the sources are in the section each entry links to.
 | [Twist-lock seam for a two-half shell](#twist-lock-seam-for-a-two-half-shell) | closing a round or cylindrical shell from the inside, no hardware, opened now and then | worked in the hand (final lengths not yet printed) |
 | [Printed hub on a micro-servo spline](#printed-hub-on-a-micro-servo-spline) | driving a printed arm, jaw or paddle from an SG90/MG90S | printed, not yet proven |
 | [Side-entry micro-servo mount](#side-entry-micro-servo-mount) | holding a micro servo in a printed block when its lead leaves the end face | designed and checked |
-| [Crush-rib socket](#crush-rib-socket) | pressing a printed part into a printed bore that has to stay put without glue | worked in the hand (the plug; the lip version not reported; long-term hold not known) |
+| [Crush-rib socket](#crush-rib-socket) | pressing a printed part into a printed bore that has to stay put without glue | plug version seats flush but did not hold alone; lip version not reported |
 | [Ear-and-post second mount inside a shell](#ear-and-post-second-mount-inside-a-shell) | anchoring a part already located by a hole, with no fastener showing outside | designed and checked |
 | [Lay-in cable notch at a seam](#lay-in-cable-notch-at-a-seam) | letting cables with fat plugs leave a shell that closes by twisting | designed and checked |
 | [Fold-out plate on a friction hinge](#fold-out-plate-on-a-friction-hinge) | a printed plate fixed to an existing hinge leaf (a stand, a flap) | designed and checked |
@@ -108,15 +108,18 @@ stopping short of the bore's first-layer flare, with a 0.8 mm chamfer on the lip
 the wall doesn't; too tight, shave the ribs with a knife. Guides suggest ribs about 0.2 mm proud; this used 0.05
 because printed holes already come out small (section 1). Report the fit (won't go / push / slides) when printed.
 
-**Plug version (worked in the hand, 2026-10-31).** A plug pressed into an oval hole through a curved shell wall, where glue was
+**Plug version (printed, did not hold without glue, 2026-10-31).** A plug pressed into an oval hole through a curved shell wall, where glue was
 the alternative. The pin body sits 0.35 mm clear of the hole and never touches. Eight ribs (1.6 mm wide at the base, 0.6 at the tip,
 0.8 mm lead-in, stopping 0.6 mm short of the face) do all the gripping. The flange behind the wall copies the wall's curve, so
 seated means flush. Three plugs at rib gaps +0.15, +0.05 and -0.05 mm from the modelled hole, marked with 1, 2 and 3 notches through
-the flange's rim (section 1, coupons). **The -0.05 plug, 3 notches, fit best**, on the real shell. It is the tightest size tried.
+the flange's rim (section 1, coupons). The -0.05 plug, 3 notches, fit best on the real shell, but a thumb bump pushed it out, so it was glued. Seating flush worked; retention
+did not. It is the tightest size tried; tighter ones are modelled, not printed. If the part can be merged with something located
+(section 0 of the entry point, "Don't have two parts"), do that: the next version of this design would put the eye on the bracket
+that already seats behind the wall, with a little preload pushing it forward so tolerances can't leave it hanging back.
 
 Failed version: a plain plug with a flat flange and no ribs stood proud of the sphere and needed glue. A flat flange on a curved
 wall touches at one point, and in the model it would have seated flush, so the plug probably never went all the way in (not
-measured). PLA creeps, so a joint held only by friction may loosen over months (section 1); this one carries only its own weight.
+measured).
 
 ## Ear-and-post second mount inside a shell
 
@@ -165,6 +168,15 @@ own friction holds it at any angle.
 
 **Use it when** cables leave a two-half shell and a plug may be too big for any hole you want to leave. Cables are laid in, so the
 opening is sized for the cable, not the plug.
+
+**Update (2026-10-31): put the exit on the side away from the viewer.** A ball head on a ring gets tilted in use, and tilting rolls the
+bottom forward: on a 170 mm ball resting on a 107 mm ring, an exit 18 mm forward of the bottom pole showed at about 27° of tilt. Moved to the
+back half with its near edge 25 mm behind the seam, a closed slot stays hidden to about 57° (model only, not printed). Check visibility at the
+tilts the part will really be used at, not only level. The price: the lead now passes through the half that comes off, so a closed slot
+tethers it, and a lay-in notch doesn't, which is another reason to prefer the notch. A closing check also caught that a half cannot be
+fitted while its partner sits fully down in the ring: its lower edge overlaps the ring until about 4 mm up. Sweep the closing motion where the builder
+will really do it, on the stand.
+
 
 **Motion**: with one half off, lay the cables in the notch, press them clear of the seam, close the other half.
 

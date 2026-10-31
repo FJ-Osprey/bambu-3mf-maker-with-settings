@@ -6,7 +6,7 @@ This repo is where everything learned about designing parts for FDM printing is 
 rules, the measured numbers, and the **solved mechanisms** (`docs/design-for-print/10-solved-mechanisms.md`: joints,
 latches, mounts and couplings already built and tried, with their numbers and failed versions). Sessions in other
 repos are pointed here by a user-level rule and the `design-for-print` skill. Project files (part generators, 3MFs for
-a specific build) live in their own repos, not here.
+a specific build) live in their own repos, not here. One exception: `talkbot-head/` is a one-way export from a private project (its parts are attached to tagged GitHub Releases, not committed). Never edit it here; change the source and re-export.
 
 ## Read before designing or packaging a print
 

@@ -21,6 +21,7 @@ The long-form reasoning and the sources are in the section each entry links to.
 | [Side-entry micro-servo mount](#side-entry-micro-servo-mount) | holding a micro servo in a printed block when its lead leaves the end face | designed and checked |
 | [Crush-rib socket](#crush-rib-socket) | pressing a printed part into a printed bore that has to stay put without glue | designed and checked |
 | [Ear-and-post second mount inside a shell](#ear-and-post-second-mount-inside-a-shell) | anchoring a part already located by a hole, with no fastener showing outside | designed and checked |
+| [Lay-in cable notch at a seam](#lay-in-cable-notch-at-a-seam) | letting cables with fat plugs leave a shell that closes by twisting | designed and checked |
 | [Fold-out plate on a friction hinge](#fold-out-plate-on-a-friction-hinge) | a printed plate fixed to an existing hinge leaf (a stand, a flap) | designed and checked |
 
 ## Twist-lock seam for a two-half shell
@@ -149,3 +150,26 @@ own friction holds it at any angle.
   locate on a printed feature, never "where it lands".
 - When there are no calipers, print a fit coupon of the leaf's width at three sizes (e.g. 13.0 / 13.4 / 13.8) before
   the part.
+
+## Lay-in cable notch at a seam
+
+**Use it when** cables leave a two-half shell and a plug may be too big for any hole you want to leave. Cables are laid in, so the
+opening is sized for the cable, not the plug.
+
+**Motion**: with one half off, lay the cables in the notch, press them clear of the seam, close the other half.
+
+**Numbers** (170 mm twist-lock shell, not printed yet): a notch open to the rim in **one half only**, through the wall and the lip. Width
+is the cables side by side plus 3 mm, depth is the thickest cable plus about 1.8 mm, then a 45-degree gable so the wall prints without a
+flat roof. Half a hole in each half would close to twice the size needed.
+
+**Failed versions**: a round hole half in each part could not line up at insertion on a twist seam, because the halves meet about 18 mm
+from locked. A closed slot in one half fits only what can be threaded through it. Sized with 1 mm of slack and the cable faces 0.2 mm
+from the seam, the closed half sat 0.15 mm into the cables and slid along them on the twist: a review found it, because the check had
+swept the other half only away from the cables. Check the seated position, past nominal, on the side the part can actually go.
+
+**Watch**: the lip is gone at the notch, so put it near a latch or test it on a hoop with the notch cut. The ring the part prints on is
+now open at two ends: keep the brim and watch those ends. Trace the cable's whole route: a notch that exits above something tall has
+nowhere to go.
+
+**The same idea on a stand**: an arch open at the bottom edge of a part lowered onto a base is a lay-in slot too. Cables rest on the
+base's rim and the part comes down over them.
